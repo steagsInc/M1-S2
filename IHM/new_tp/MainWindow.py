@@ -14,7 +14,7 @@ class MainWindow(QMainWindow):
         self.CreatefileMenu()
         self.Createtoolbar()
         self.statusBar()
-        self.CreateCentralWidget("")
+        self.CreateCentralWidget()
         print("constructeur de la class MainWindow")
         
         print( "init mainwindow")
@@ -91,9 +91,15 @@ class MainWindow(QMainWindow):
         toolbar.addAction(self.saveact)
         toolbar.addAction(self.closeact)
     
-    def CreateCentralWidget(self,text) :
-        self.textedit = QTextEdit()
-        self.setCentralWidget(self.textedit)
+    def CreateCentralWidget(self) :
+        self.widget = QWidget()
+        self.setCentralWidget(self.widget)
+        self.layout = QVBoxLayout()
+        self.widget.setLayout(self.layout)
+        self.textEdit = QTextEdit()
+        self.canvas = Canvas()
+        self.layout.addWidget(self.canvas)
+        self.layout.addWidget(self.textEdit)
         
     def closeEvent(self, event):
         msg = QMessageBox()
@@ -111,14 +117,14 @@ class MainWindow(QMainWindow):
         f = open(fileName[0],"r")
         text = f.read()
         f.close()
-        self.textedit.setHtml(text)
+        self.textEdit.setHtml(text)
         print(fileName)
     
     ###############
     def save(self):
         fileName = QFileDialog.getSaveFileName( self, "Sauvegarder", "", "*.html")
         f = open(fileName[0],"w")
-        text = self.textedit.toHtml()
+        text = self.textEdit.toHtml()
         text = f.write(text)
         f.close()
         print(fileName)       
@@ -134,18 +140,27 @@ class MainWindow(QMainWindow):
     ##############
     def pen_color(self):
         self.log_action("choose pen color")
+        colorD = QColorDialog()
+        colorD.exec()
+        self.canvas.setPenColor(colorD.selectedColor())
 
     def brush_color(self):
         self.log_action("choose brush color")
+        colorD = QColorDialog()
+        colorD.exec()
+        self.canvas.setBrushColor(colorD.selectedColor())
 
     def rectangle(self):
         self.log_action("Shape mode: rectangle")
+        self.canvas.setShape(0)
 
     def ellipse(self):
         self.log_action("Shape Mode: circle")
+        self.canvas.setShape(1)
 
     def free_drawing(self):
         self.log_action("Shape mode: free drawing")
+        self.canvas.setShape(2)
 
     def move(self):
         self.log_action("Mode: move")
