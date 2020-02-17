@@ -164,12 +164,15 @@ class MainWindow(QMainWindow):
 
     def move(self):
         self.log_action("Mode: move")
+        self.canvas.selectMode("move")
 
     def draw(self):
         self.log_action("Mode: draw")
+        self.canvas.selectMode("draw")
 
     def select(self):
         self.log_action("Mode: select")
+        self.canvas.selectMode("select")
 
     def log_action(self, str):
         content = self.textEdit.toPlainText()
