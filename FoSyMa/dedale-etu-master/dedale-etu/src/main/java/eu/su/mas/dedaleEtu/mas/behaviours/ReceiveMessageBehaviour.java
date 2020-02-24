@@ -43,16 +43,15 @@ public class ReceiveMessageBehaviour extends SimpleBehaviour{
 
 		final ACLMessage msg = this.myAgent.receive(msgTemplate);
 		if (msg != null) {		
-			System.out.println(this.myAgent.getLocalName()+"<----Result received from "+msg.getSender().getLocalName()+" ,content= "+msg.getContent());
+			System.out.println(this.myAgent.getLocalName()+"<----Result received from "+msg.getSender().getLocalName());
 			try {
 				HashMap<String,Object> truc = (HashMap<String, Object>) msg.getContentObject();	
-				((ExploreSoloAgent)this.myAgent).getSolo().mergeMap((List<String>)truc.get("open"),(Set<String>)truc.get("closed"));
+				((ExploreSoloAgent)this.myAgent).getSolo().mergeMap((List<String>)truc.get("open"),(Set<String>)truc.get("closed"),(List<String>)truc.get("edges"));
 				
 			} catch (UnreadableException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			this.finished=true;
 		}else{
 			block();// the behaviour goes to sleep until the arrival of a new message in the agent's Inbox.
 		}

@@ -49,7 +49,8 @@ public class SayHello extends TickerBehaviour{
 			HashMap<String,Object> truc = new HashMap();
 			
 			truc.put("open", ((ExploreSoloAgent)this.myAgent).getSolo().getOpenNodes());
-			truc.put("close", ((ExploreSoloAgent)this.myAgent).getSolo().getClosedNodes());
+			truc.put("closed", ((ExploreSoloAgent)this.myAgent).getSolo().getClosedNodes());
+			truc.put("edges", ((ExploreSoloAgent)this.myAgent).getSolo().getEdges());
 				
 			
 			System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
