@@ -5,9 +5,11 @@ import java.util.List;
 
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
+import eu.su.mas.dedaleEtu.mas.behaviours.AskStop;
 import eu.su.mas.dedaleEtu.mas.behaviours.ExploSoloBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.ReceiveMessageBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.SayHello;
+import eu.su.mas.dedaleEtu.mas.behaviours.Theonewhostops;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.Behaviour;
 
@@ -27,6 +29,7 @@ public class ExploreSoloAgent extends AbstractDedaleAgent {
 	private static final long serialVersionUID = -6431752665590433727L;
 	private MapRepresentation myMap;
 	private ExploSoloBehaviour solo;
+	private AskStop stop;
 	
 
 	/**
@@ -51,8 +54,11 @@ public class ExploreSoloAgent extends AbstractDedaleAgent {
 		 ************************************************/
 		
 		solo = new ExploSoloBehaviour(this,this.myMap);
+		stop = new AskStop(this);
 		lb.add(solo);
 		lb.add(new SayHello(this));
+		lb.add(stop);
+		lb.add(new Theonewhostops(this));
 		lb.add(new ReceiveMessageBehaviour(this));
 		
 		/***
@@ -69,6 +75,11 @@ public class ExploreSoloAgent extends AbstractDedaleAgent {
 
 	public ExploSoloBehaviour getSolo() {
 		return solo;
+	}
+
+
+	public AskStop getStop() {
+		return stop;
 	}
 	
 	

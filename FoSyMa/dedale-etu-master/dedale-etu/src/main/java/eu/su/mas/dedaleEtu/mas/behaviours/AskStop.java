@@ -13,14 +13,13 @@ import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 
 /**
  * This example behaviour try to send a hello message (every 3s maximum) to agents Collect2 Collect1
  * @author hc
  *
  */
-public class SayHello extends SimpleBehaviour{
+public class AskStop extends SimpleBehaviour{
 
 	/**
 	 * 
@@ -32,46 +31,33 @@ public class SayHello extends SimpleBehaviour{
 	 * @param myagent the agent who posses the behaviour
 	 *  
 	 */
-	public SayHello (final Agent myagent) {
+	private String lastPos;
+	
+	public AskStop (final Agent myagent) {
 		super(myagent);
+		this.lastPos="";
 	}
 
 	@Override
 	public void action() {
-		
-		final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.CONFIRM);			
+		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 
-		final ACLMessage msgR = this.myAgent.receive(msgTemplate);
-		if (msgR != null) {
+		//A message is defined by : a performative, a sender, a set of receivers, (a protocol),(a content (and/or contentOBject))
+		ACLMessage msg=new ACLMessage(ACLMessage.REQUEST);
+		msg.setSender(this.myAgent.getAID());
+		msg.setProtocol("Stop");
+
+		if (myPosition!="" && myPosition!=this.lastPos){
 			
-			((ExploreSoloAgent)this.myAgent).getStop().block();
-
-			//A message is defined by : a performative, a sender, a set of receivers, (a protocol),(a content (and/or contentOBject))
-			ACLMessage msg=new ACLMessage(ACLMessage.INFORM);
-			msg.setSender(this.myAgent.getAID());
-			msg.setProtocol("UselessProtocol");
-
-			HashMap<String,Object> truc = new HashMap();
-			
-			truc.put("open", ((ExploreSoloAgent)this.myAgent).getSolo().getOpenNodes());
-			truc.put("closed", ((ExploreSoloAgent)this.myAgent).getSolo().getClosedNodes());
-			truc.put("edges", ((ExploreSoloAgent)this.myAgent).getSolo().getEdges());
-				
 			System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
-			
-			try {
-				msg.setContentObject(truc);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			msg.setContent("Hello World, I'm at "+myPosition);
 
 			msg.addReceiver(new AID("Explo1",AID.ISLOCALNAME));
 			msg.addReceiver(new AID("Explo2",AID.ISLOCALNAME));
 
 			//Mandatory to use this method (it takes into account the environment to decide if someone is reachable or not)
 			((AbstractDedaleAgent)this.myAgent).sendMessage(msg);
-		
+			this.lastPos=myPosition;
 		}
 	}
 

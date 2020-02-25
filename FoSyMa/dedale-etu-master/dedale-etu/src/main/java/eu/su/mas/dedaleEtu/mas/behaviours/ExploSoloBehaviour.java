@@ -59,7 +59,7 @@ public class ExploSoloBehaviour extends SimpleBehaviour {
 	}
 	
 	public void mergeMap(List<String> openNodes,Set<String> closedNodes,List<String> edges) {
-		System.out.print("prout");
+
 		for (String n : closedNodes) {
 			if(!this.closedNodes.contains(n)) {
 				this.myMap.addNode(n,MapAttribute.closed);
@@ -67,16 +67,24 @@ public class ExploSoloBehaviour extends SimpleBehaviour {
 			}
         }
 		for (String n : openNodes) {
-			if(!this.closedNodes.contains(n)) {
+			if(!this.openNodes.contains(n)) {
 				this.myMap.addNode(n,MapAttribute.open);
 				this.openNodes.add(n);
 			}
         }
-		for (int i = 0;i<edges.size();i=i+2) {
-			boolean b0 = closedNodes.contains(edges.get(i)) || openNodes.contains(edges.get(i));
-			boolean b1 = closedNodes.contains(edges.get(i+1)) || openNodes.contains(edges.get(i+1));
-			if(b0 && b1) {
-				this.myMap.addEdge(edges.get(i), edges.get(i+1));
+		
+		List<String> myEdges = myMap.getEdges();
+		
+		for (String e : edges) {
+			if(!myEdges.contains(e)) {
+				String [] s = e.split(",");
+				String e0 = s[0];
+				String e1 = s[1];
+				boolean b0 = closedNodes.contains(e0) || openNodes.contains(e0);
+				boolean b1 = closedNodes.contains(e1) || openNodes.contains(e1);
+				if(b0 && b1) {
+					this.myMap.addEdge(e0, e1);
+				}
 			}
 		}
 	

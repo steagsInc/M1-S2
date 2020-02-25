@@ -202,8 +202,7 @@ public class MapRepresentation implements Serializable {
 		List<String> edges = new ArrayList<String>();
 		
 		for (int i = 0;i<this.nbEdges;i++) {
-			edges.add(g.getEdge(i).getNode0().getId());
-			edges.add(g.getEdge(i).getNode1().getId());
+			edges.add(g.getEdge(i).getNode0().getId()+","+g.getEdge(i).getNode1().getId());
 		}
 		
 		return edges;
