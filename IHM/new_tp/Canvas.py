@@ -1,6 +1,7 @@
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtChart import *
 
 
 class Canvas(QWidget):
@@ -25,7 +26,6 @@ class Canvas(QWidget):
         self.mode = m
         self.selected = []
         self.update() 
-        
 
     def setShape(self,shape):
         self.shape=shape
@@ -109,6 +109,22 @@ class Canvas(QWidget):
         for i in self.selected:
             self.shapeList[i][1] = self.penColor
             self.shapeList[i][2] = self.brushColor
+            
+    def createChartShape(self):
+        chart =QChart() # Modèle
+        chart.setTitle("Shapes")
+        pie = QPieSeries()
+        count = [0,0,0]
+        for s in self.shapeList:
+            count[s[0]] += 1
+        s0 = QPieSlice("rect",count[0])
+        s1 = QPieSlice("ellipse",count[1])
+        s2 = QPieSlice("freeDrawing",count[2])
+        pie.append(s0)
+        pie.append(s1)
+        pie.append(s2)
+        chart.addSeries(pie)
+        return chart
                 
         
     def mousePressEvent(self, event):

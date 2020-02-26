@@ -2,7 +2,9 @@ import sys
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtChart import *
 from Canvas import *
+from Chart import *
 import resources
 
 class MainWindow(QMainWindow):
@@ -47,7 +49,10 @@ class MainWindow(QMainWindow):
         actMove = modeMenu.addAction(QIcon(":/icons/move.png"), "&Move", self.move)
         actDraw = modeMenu.addAction(QIcon(":/icons/draw.png"), "&Draw", self.draw)
         actSelect = modeMenu.addAction(QIcon(":/icons/select.png"), "&Select", self.select)
-
+        
+        statMenu = bar.addMenu("Stat")
+        shapeChart = statMenu.addAction(QIcon(":/icons/move.png"), "&Shape", self.showChart)
+        
         modeToolBar = QToolBar("Navigation")
         self.addToolBar( modeToolBar )
         modeToolBar.addAction( actMove )
@@ -173,6 +178,13 @@ class MainWindow(QMainWindow):
     def select(self):
         self.log_action("Mode: select")
         self.canvas.selectMode("select")
+        
+    ##############
+    def showChart(self):
+        qtchart = self.canvas.createChartShape()
+        self.chart =Chart()
+        self.chart.setChart(qtchart)
+        self.chart.show()
 
     def log_action(self, str):
         content = self.textEdit.toPlainText()
