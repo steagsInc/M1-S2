@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -19,7 +20,7 @@ import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
  * @author Cédric Herpson
  *
  */
-public class ReceiveMessageBehaviour extends SimpleBehaviour{
+public class Theonewhostops extends SimpleBehaviour{
 
 	private static final long serialVersionUID = 9088209402507795289L;
 
@@ -31,7 +32,7 @@ public class ReceiveMessageBehaviour extends SimpleBehaviour{
 	 * It receives a message tagged with an inform performative, print the content in the console and destroy itlself
 	 * @param myagent
 	 */
-	public ReceiveMessageBehaviour(final Agent myagent) {
+	public Theonewhostops(final Agent myagent) {
 		super(myagent);
 
 	}
@@ -39,20 +40,19 @@ public class ReceiveMessageBehaviour extends SimpleBehaviour{
 
 	public void action() {
 		//1) receive the message
-		final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.INFORM);			
-
+		final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+		
 		final ACLMessage msg = this.myAgent.receive(msgTemplate);
+		
 		if (msg != null) {		
-			System.out.println(this.myAgent.getLocalName()+"<----Result received from "+msg.getSender().getLocalName());
-			try {
-				HashMap<String,Object> truc = (HashMap<String, Object>) msg.getContentObject();	
-				((ExploreSoloAgent)this.myAgent).getSolo().mergeMap((List<String>)truc.get("open"),(Set<String>)truc.get("closed"),(List<String>)truc.get("edges"));
-				((ExploreSoloAgent)this.myAgent).getSolo().restart();
-				
-			} catch (UnreadableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			System.out.println(this.myAgent.getLocalName()+"<----Request received from "+msg.getSender().getLocalName());
+			((ExploreSoloAgent)this.myAgent).getSolo().block();
+			
+			ACLMessage msg1=new ACLMessage(ACLMessage.CONFIRM);
+			msg1.setSender(this.myAgent.getAID());
+			msg1.setProtocol("i have stoped");
+			msg1.addReceiver(new AID(msg.getSender().getLocalName(),AID.ISLOCALNAME));
+			
 		}else{
 			block();// the behaviour goes to sleep until the arrival of a new message in the agent's Inbox.
 		}

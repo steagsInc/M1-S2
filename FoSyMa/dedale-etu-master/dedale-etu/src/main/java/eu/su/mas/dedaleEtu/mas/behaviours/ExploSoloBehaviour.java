@@ -58,13 +58,37 @@ public class ExploSoloBehaviour extends SimpleBehaviour {
 		this.closedNodes=new HashSet<String>();
 	}
 	
-	public void mergeMap(List<String> openNodes,Set<String> closedNodes) {
+	public void mergeMap(List<String> openNodes,Set<String> closedNodes,List<String> edges) {
+
 		for (String n : closedNodes) {
-			this.myMap.addNode(n,MapAttribute.closed);
+			if(!this.closedNodes.contains(n)) {
+				this.myMap.addNode(n,MapAttribute.closed);
+				this.closedNodes.add(n);
+			}
         }
-		this.closedNodes.addAll(closedNodes);
-		this.openNodes.addAll(openNodes);
-		this.openNodes.removeAll(this.closedNodes);
+		for (String n : openNodes) {
+			if(!this.openNodes.contains(n)) {
+				this.myMap.addNode(n,MapAttribute.open);
+				this.openNodes.add(n);
+			}
+        }
+		
+		List<String> myEdges = myMap.getEdges();
+		
+		for (String e : edges) {
+			if(!myEdges.contains(e)) {
+				String [] s = e.split(",");
+				String e0 = s[0];
+				String e1 = s[1];
+				boolean b0 = closedNodes.contains(e0) || openNodes.contains(e0);
+				boolean b1 = closedNodes.contains(e1) || openNodes.contains(e1);
+				if(b0 && b1) {
+					this.myMap.addEdge(e0, e1);
+				}
+			}
+		}
+	
+		this.openNodes.removeAll(closedNodes);
 		
 	}
 
@@ -197,5 +221,9 @@ public class ExploSoloBehaviour extends SimpleBehaviour {
 
 	public Set<String> getClosedNodes() {
 		return closedNodes;
+	}
+	
+	public List<String> getEdges() {
+		return myMap.getEdges();
 	}
 }

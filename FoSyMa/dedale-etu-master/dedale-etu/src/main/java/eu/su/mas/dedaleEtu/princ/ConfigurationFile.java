@@ -99,7 +99,7 @@ public final class ConfigurationFile {
 	/**
 	 * Parameter used to generate the environment 
 	 */
-	public static Integer ENVIRONMENT_SIZE=10;
+	public static Integer ENVIRONMENT_SIZE=30;
 	
 	/**
 	 * Parameter used to perceive the wumpus trough its smell
@@ -107,7 +107,7 @@ public final class ConfigurationFile {
 	public static final Integer DEFAULT_DETECTION_RADIUS = 1;
 	
 	/**true if a grid environment should be generated, false otherwise (A dogoronev env is generated)**/
-	public static boolean ENVIRONMENTisGRID=true;
+	public static boolean ENVIRONMENTisGRID=false;
 	public static boolean ACTIVE_WELL=false;
 	public static boolean ACTIVE_GOLD=false;
 	public static boolean ACTIVE_DIAMOND=false;
