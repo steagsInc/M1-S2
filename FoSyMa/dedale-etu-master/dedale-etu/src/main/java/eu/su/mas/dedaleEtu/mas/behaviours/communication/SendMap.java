@@ -1,8 +1,9 @@
-package eu.su.mas.dedaleEtu.mas.behaviours;
+package eu.su.mas.dedaleEtu.mas.behaviours.communication;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.TransducedAccessor_field_Short;
 
@@ -20,7 +21,7 @@ import jade.lang.acl.MessageTemplate;
  * @author hc
  *
  */
-public class SayHello extends SimpleBehaviour{
+public class SendMap extends SimpleBehaviour{
 
 	/**
 	 * 
@@ -32,30 +33,33 @@ public class SayHello extends SimpleBehaviour{
 	 * @param myagent the agent who posses the behaviour
 	 *  
 	 */
-	public SayHello (final Agent myagent) {
+	public SendMap (final Agent myagent) {
 		super(myagent);
 	}
 
 	@Override
 	public void action() {
 		
-		final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.CONFIRM);			
+		final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.CONFIRM);
+		
+		ExploreSoloAgent agent = (ExploreSoloAgent) this.myAgent;
 
 		final ACLMessage msgR = this.myAgent.receive(msgTemplate);
 		if (msgR != null) {
 			
-			((ExploreSoloAgent)this.myAgent).getStop().block();
+			agent.getStop().block();
 
 			//A message is defined by : a performative, a sender, a set of receivers, (a protocol),(a content (and/or contentOBject))
 			ACLMessage msg=new ACLMessage(ACLMessage.INFORM);
 			msg.setSender(this.myAgent.getAID());
 			msg.setProtocol("UselessProtocol");
+			agent.setConversationID(Integer.parseInt(msg.getContent()));
 
 			HashMap<String,Object> truc = new HashMap();
 			
-			truc.put("open", ((ExploreSoloAgent)this.myAgent).getSolo().getOpenNodes());
-			truc.put("closed", ((ExploreSoloAgent)this.myAgent).getSolo().getClosedNodes());
-			truc.put("edges", ((ExploreSoloAgent)this.myAgent).getSolo().getEdges());
+			truc.put("open", agent.getSolo().getOpenNodes());
+			truc.put("closed", agent.getSolo().getClosedNodes());
+			truc.put("edges", agent.getSolo().getEdges());
 				
 			System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
 			
@@ -66,8 +70,11 @@ public class SayHello extends SimpleBehaviour{
 				e.printStackTrace();
 			}
 
-			msg.addReceiver(new AID("Explo1",AID.ISLOCALNAME));
-			msg.addReceiver(new AID("Explo2",AID.ISLOCALNAME));
+			List<AbstractDedaleAgent> agents =((ExploreSoloAgent)this.myAgent).getYellowpage().getOtherAgents((AbstractDedaleAgent) this.myAgent);
+			
+			for(AbstractDedaleAgent a:agents) {
+				msg.addReceiver(new AID(a.getName(),AID.ISLOCALNAME));
+			}
 
 			//Mandatory to use this method (it takes into account the environment to decide if someone is reachable or not)
 			((AbstractDedaleAgent)this.myAgent).sendMessage(msg);

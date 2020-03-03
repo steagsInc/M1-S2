@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours;
+package eu.su.mas.dedaleEtu.mas.behaviours.exploration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -161,7 +161,7 @@ public class ExploSoloBehaviour extends SimpleBehaviour {
 
 				//list of observations associated to the currentPosition
 				List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
-				System.out.println(this.myAgent.getLocalName()+" - State of the observations : "+lobs);
+				//System.out.println(this.myAgent.getLocalName()+" - State of the observations : "+lobs);
 				
 				//example related to the use of the backpack for the treasure hunt
 				Boolean b=false;

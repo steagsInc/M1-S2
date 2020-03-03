@@ -1,8 +1,9 @@
-package eu.su.mas.dedaleEtu.mas.behaviours;
+package eu.su.mas.dedaleEtu.mas.behaviours.communication;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.TransducedAccessor_field_Short;
 
@@ -46,14 +47,19 @@ public class AskStop extends SimpleBehaviour{
 		ACLMessage msg=new ACLMessage(ACLMessage.REQUEST);
 		msg.setSender(this.myAgent.getAID());
 		msg.setProtocol("Stop");
+		
+		ExploreSoloAgent agent=(ExploreSoloAgent) this.myAgent;
 
-		if (myPosition!="" && myPosition!=this.lastPos){
+		if (myPosition!="" && myPosition!=this.lastPos && agent.getConversationID()==0){
 			
-			System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
+			//System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
 			msg.setContent("Hello World, I'm at "+myPosition);
 
-			msg.addReceiver(new AID("Explo1",AID.ISLOCALNAME));
-			msg.addReceiver(new AID("Explo2",AID.ISLOCALNAME));
+			List<AbstractDedaleAgent> agents =((ExploreSoloAgent)this.myAgent).getYellowpage().getOtherAgents((AbstractDedaleAgent) this.myAgent);
+			
+			for(AbstractDedaleAgent a:agents) {
+				msg.addReceiver(new AID(a.getLocalName(),AID.ISLOCALNAME));
+			}
 
 			//Mandatory to use this method (it takes into account the environment to decide if someone is reachable or not)
 			((AbstractDedaleAgent)this.myAgent).sendMessage(msg);
