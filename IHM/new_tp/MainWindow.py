@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         print("constructeur de la class MainWindow")
         
         print( "init mainwindow")
-        self.resize(600, 500)
+        self.resize(800, 500)
 
         bar = self.menuBar()
         fileMenu = bar.addMenu("File")
@@ -49,9 +49,6 @@ class MainWindow(QMainWindow):
         actMove = modeMenu.addAction(QIcon(":/icons/move.png"), "&Move", self.move)
         actDraw = modeMenu.addAction(QIcon(":/icons/draw.png"), "&Draw", self.draw)
         actSelect = modeMenu.addAction(QIcon(":/icons/select.png"), "&Select", self.select)
-        
-        statMenu = bar.addMenu("Stat")
-        shapeChart = statMenu.addAction(QIcon(":/icons/move.png"), "&Shape", self.showChart)
         
         modeToolBar = QToolBar("Navigation")
         self.addToolBar( modeToolBar )
@@ -99,12 +96,21 @@ class MainWindow(QMainWindow):
     def CreateCentralWidget(self) :
         self.widget = QWidget()
         self.setCentralWidget(self.widget)
+
         self.layout = QVBoxLayout()
-        self.widget.setLayout(self.layout)
         self.textEdit = QTextEdit()
+        self.textEdit.setMaximumSize(500,100)
         self.canvas = Canvas()
         self.layout.addWidget(self.canvas)
         self.layout.addWidget(self.textEdit)
+
+        self.Hlayout = QHBoxLayout()
+        self.chart = Chart()
+        self.canvas.setChartWidget(self.chart)
+        self.Hlayout.addLayout(self.layout)
+        self.Hlayout.addWidget(self.chart)
+
+        self.widget.setLayout(self.Hlayout)
         
     def closeEvent(self, event):
         msg = QMessageBox()
@@ -178,13 +184,6 @@ class MainWindow(QMainWindow):
     def select(self):
         self.log_action("Mode: select")
         self.canvas.selectMode("select")
-        
-    ##############
-    def showChart(self):
-        qtchart = self.canvas.createChartShape()
-        self.chart =Chart()
-        self.chart.setChart(qtchart)
-        self.chart.show()
 
     def log_action(self, str):
         content = self.textEdit.toPlainText()
