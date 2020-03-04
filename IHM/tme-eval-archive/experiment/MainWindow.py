@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stack)
         
         self.load_experiment_plan()
-        self.content = "ID,Trial,Type,Number,Result,Time\n"
+        self.content = ""
         
 
     def start_experiment(self):
