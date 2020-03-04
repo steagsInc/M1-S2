@@ -197,4 +197,14 @@ public class MapRepresentation implements Serializable {
 		viewer.addDefaultView(true);
 		g.display();
 	}
+
+	public List<String> getEdges() {
+		List<String> edges = new ArrayList<String>();
+		
+		for (int i = 0;i<this.nbEdges;i++) {
+			edges.add(g.getEdge(i).getNode0().getId()+","+g.getEdge(i).getNode1().getId());
+		}
+		
+		return edges;
+	}
 }

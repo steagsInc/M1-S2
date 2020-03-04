@@ -1,0 +1,109 @@
+Participant,Practice,Block,Trial,type,number
+0,false,1,0,size,16
+0,false,1,1,size,25
+0,false,2,0,size,16
+0,false,2,1,size,25
+0,false,3,0,curvature,25
+0,false,3,1,curvature,16
+0,false,4,0,size,16
+0,false,4,1,size,25
+0,false,5,0,curvature & size,25
+0,false,5,1,curvature & size,16
+0,false,6,0,curvature & size,16
+0,false,6,1,curvature & size,25
+0,false,7,0,curvature,16
+0,false,7,1,curvature,25
+0,false,8,0,curvature,16
+0,false,8,1,curvature,25
+0,false,9,0,curvature & size,16
+0,false,9,1,curvature & size,25
+1,false,1,0,curvature,25
+1,false,1,1,curvature,16
+1,false,2,0,curvature,16
+1,false,2,1,curvature,25
+1,false,3,0,curvature & size,16
+1,false,3,1,curvature & size,25
+1,false,4,0,size,25
+1,false,4,1,size,16
+1,false,5,0,size,16
+1,false,5,1,size,25
+1,false,6,0,curvature,16
+1,false,6,1,curvature,25
+1,false,7,0,size,16
+1,false,7,1,size,25
+1,false,8,0,curvature & size,16
+1,false,8,1,curvature & size,25
+1,false,9,0,curvature & size,16
+1,false,9,1,curvature & size,25
+2,false,1,0,curvature,16
+2,false,1,1,curvature,25
+2,false,2,0,curvature & size,25
+2,false,2,1,curvature & size,16
+2,false,3,0,size,16
+2,false,3,1,size,25
+2,false,4,0,size,16
+2,false,4,1,size,25
+2,false,5,0,curvature,16
+2,false,5,1,curvature,25
+2,false,6,0,size,16
+2,false,6,1,size,25
+2,false,7,0,curvature & size,25
+2,false,7,1,curvature & size,16
+2,false,8,0,curvature & size,25
+2,false,8,1,curvature & size,16
+2,false,9,0,curvature,25
+2,false,9,1,curvature,16
+3,false,1,0,curvature & size,16
+3,false,1,1,curvature & size,25
+3,false,2,0,curvature & size,16
+3,false,2,1,curvature & size,25
+3,false,3,0,curvature,16
+3,false,3,1,curvature,25
+3,false,4,0,curvature,25
+3,false,4,1,curvature,16
+3,false,5,0,curvature & size,25
+3,false,5,1,curvature & size,16
+3,false,6,0,size,16
+3,false,6,1,size,25
+3,false,7,0,size,16
+3,false,7,1,size,25
+3,false,8,0,curvature,16
+3,false,8,1,curvature,25
+3,false,9,0,size,16
+3,false,9,1,size,25
+4,false,1,0,size,16
+4,false,1,1,size,25
+4,false,2,0,curvature,25
+4,false,2,1,curvature,16
+4,false,3,0,size,16
+4,false,3,1,size,25
+4,false,4,0,curvature & size,16
+4,false,4,1,curvature & size,25
+4,false,5,0,curvature & size,16
+4,false,5,1,curvature & size,25
+4,false,6,0,curvature,25
+4,false,6,1,curvature,16
+4,false,7,0,curvature,16
+4,false,7,1,curvature,25
+4,false,8,0,curvature & size,16
+4,false,8,1,curvature & size,25
+4,false,9,0,size,25
+4,false,9,1,size,16
+5,false,1,0,size,25
+5,false,1,1,size,16
+5,false,2,0,curvature & size,16
+5,false,2,1,curvature & size,25
+5,false,3,0,curvature & size,25
+5,false,3,1,curvature & size,16
+5,false,4,0,curvature,25
+5,false,4,1,curvature,16
+5,false,5,0,curvature,25
+5,false,5,1,curvature,16
+5,false,6,0,curvature & size,16
+5,false,6,1,curvature & size,25
+5,false,7,0,size,16
+5,false,7,1,size,25
+5,false,8,0,size,25
+5,false,8,1,size,16
+5,false,9,0,curvature,25
+5,false,9,1,curvature,16
