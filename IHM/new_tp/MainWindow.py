@@ -56,6 +56,9 @@ class MainWindow(QMainWindow):
         modeToolBar.addAction( actDraw )
         modeToolBar.addAction( actSelect )
 
+        #STAT
+        self.buttonCount=[0,0,0,0,0,0,0,0]
+
     ##############
     def CreateActs(self):
         self.newact = QAction(QIcon(":/icons/new.png"), "Nouveau...", self)
@@ -154,36 +157,52 @@ class MainWindow(QMainWindow):
         colorD = QColorDialog()
         colorD.exec()
         self.canvas.setPenColor(colorD.selectedColor())
+        self.buttonCount[0]+=1
+        self.chart.updateButtonChart(self.buttonCount)
 
     def brush_color(self):
         self.log_action("choose brush color")
         colorD = QColorDialog()
         colorD.exec()
         self.canvas.setBrushColor(colorD.selectedColor())
+        self.buttonCount[1] += 1
+        self.chart.updateButtonChart(self.buttonCount)
 
     def rectangle(self):
         self.log_action("Shape mode: rectangle")
         self.canvas.setShape(0)
+        self.buttonCount[2] += 1
+        self.chart.updateButtonChart(self.buttonCount)
 
     def ellipse(self):
         self.log_action("Shape Mode: circle")
         self.canvas.setShape(1)
+        self.buttonCount[3] += 1
+        self.chart.updateButtonChart(self.buttonCount)
 
     def free_drawing(self):
         self.log_action("Shape mode: free drawing")
         self.canvas.setShape(2)
+        self.buttonCount[4] += 1
+        self.chart.updateButtonChart(self.buttonCount)
 
     def move(self):
         self.log_action("Mode: move")
         self.canvas.selectMode("move")
+        self.buttonCount[5] += 1
+        self.chart.updateButtonChart(self.buttonCount)
 
     def draw(self):
         self.log_action("Mode: draw")
         self.canvas.selectMode("draw")
+        self.buttonCount[6] += 1
+        self.chart.updateButtonChart(self.buttonCount)
 
     def select(self):
         self.log_action("Mode: select")
         self.canvas.selectMode("select")
+        self.buttonCount[7] += 1
+        self.chart.updateButtonChart(self.buttonCount)
 
     def log_action(self, str):
         content = self.textEdit.toPlainText()

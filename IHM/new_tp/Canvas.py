@@ -8,7 +8,7 @@ class Canvas(QWidget):
 
     def __init__(self, parent = None):
         QWidget.__init__(self, parent )
-        self.setMinimumSize(200,200)
+        self.setMinimumSize(500,200)
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.white)
         self.setAutoFillBackground(True)
@@ -26,6 +26,7 @@ class Canvas(QWidget):
         self.selected = []
         self.lasso = QPolygon()
         self.freePen = QPolygon()
+        self.intersectPoint = QPoint(0,0)
 
         # STATS
 
@@ -127,6 +128,9 @@ class Canvas(QWidget):
             center = QPoint(end.x()-start.x()/2,end.y()-start.y()/2)
             if self.lasso.containsPoint(center,Qt.OddEvenFill) :
                 self.selected.append(i)
+            if self.shapeList[i][0]==2:
+                if not self.lasso.intersected(self.shapeList[i][5]).isEmpty():
+                    self.selected.append(i)
                 
     def selectShape(self):
         for i in range(len(self.shapeList)):
@@ -136,12 +140,35 @@ class Canvas(QWidget):
             if r.contains(self.mousecurrent) :
                 print(self.OldOffset)
                 self.selected.append(i)
+            if self.shapeList[i][0]==2:
+                if self.shapeList[i][5].containsPoint(self.mousecurrent,Qt.OddEvenFill):
+                    self.selected.append(i)
                 
     def modifyShape(self) :
         for i in self.selected:
             self.shapeList[i][1] = self.penColor
             self.shapeList[i][2] = self.brushColor
-        
+
+    def scriboliDetect(self):
+        point = QPointF(0, 0)
+        l1 = QLineF(self.lasso[len(self.lasso) - 2], self.lasso[len(self.lasso) - 1])
+        for j in range(max(0, len(self.lasso) - 100), len(self.lasso) - 20):
+            l2 = QLineF(self.lasso[j], self.lasso[j + 1])
+
+            if l1.intersect(l2, point) == 1:
+                self.intersectPoint = point
+                print("intersection detected : " + str(self.intersectPoint) + " ")
+
+    def scriboliDo(self):
+        end = self.lasso[-1]
+        copy = self.shapeList.copy()
+        if end.y() > self.intersectPoint.y():
+            for i in self.selected:
+                if copy[i] in self.shapeList:
+                    self.shapeList.remove(copy[i])
+                    print("scriboli supprime")
+        self.selected = []
+
     def mousePressEvent(self, event):
         self.selected = []
         self.pressed = True
@@ -167,6 +194,8 @@ class Canvas(QWidget):
             self.addShape()
         elif self.mode == "select" :
             self.selectShapeLasso()
+            if self.intersectPoint != QPoint(0,0) and len(self.lasso) > 0:
+                self.scriboliDo()
         self.update()
         
     def mouseMoveEvent(self, event):
@@ -178,4 +207,6 @@ class Canvas(QWidget):
             self.offset = self.mousecurrent-self.pStart 
         elif self.mode == "select" :
             self.lasso << self.mousecurrent
+            if len(self.lasso) > 0:
+                self.scriboliDetect()
         self.update()
