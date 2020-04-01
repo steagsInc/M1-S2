@@ -10,22 +10,22 @@ import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 public class YellowPage {
 	
-	private static YellowPage instance;
+	private static YellowPage instance = null;
 	
-	private List<AbstractDedaleAgent> agents;
+	private List<String> agents;
 	
 	public YellowPage() {
-		this.agents = new ArrayList<AbstractDedaleAgent>();
+		this.agents = new ArrayList<String>();
 	}
 	
 	public void register(AbstractDedaleAgent agent) {
-		this.agents.add(agent);
+		this.agents.add(agent.getLocalName());
 	}
 	
-	public List<AbstractDedaleAgent> getOtherAgents(AbstractDedaleAgent agent){
-		List<AbstractDedaleAgent> copie = new ArrayList<AbstractDedaleAgent>();
-		for(AbstractDedaleAgent a :this.agents) {
-			if(a!=agent) {
+	public List<String> getOtherAgents(AbstractDedaleAgent agent){
+		List<String> copie = new ArrayList<String>();
+		for(String a :this.agents) {
+			if(a!=agent.getLocalName()) {
 				copie.add(a);
 			}
 		}

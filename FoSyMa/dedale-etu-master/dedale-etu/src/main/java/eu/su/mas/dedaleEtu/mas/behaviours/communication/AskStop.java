@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.TransducedAccessor_field_Short;
-
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
 import jade.core.AID;
@@ -14,13 +11,14 @@ import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 /**
  * This example behaviour try to send a hello message (every 3s maximum) to agents Collect2 Collect1
  * @author hc
  *
  */
-public class AskStop extends SimpleBehaviour{
+public class AskStop extends CustomCommunicationBehaviour{
 
 	/**
 	 * 
@@ -39,31 +37,49 @@ public class AskStop extends SimpleBehaviour{
 		this.lastPos="";
 	}
 
-	@Override
-	public void action() {
+	protected void sendMessage() {
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 
-		//A message is defined by : a performative, a sender, a set of receivers, (a protocol),(a content (and/or contentOBject))
-		ACLMessage msg=new ACLMessage(ACLMessage.REQUEST);
-		msg.setSender(this.myAgent.getAID());
-		msg.setProtocol("Stop");
-		
-		ExploreSoloAgent agent=(ExploreSoloAgent) this.myAgent;
-
-		if (myPosition!="" && myPosition!=this.lastPos && agent.getConversationID()==0){
+		if (myPosition!="" && myPosition!=this.lastPos){
 			
-			//System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
-			msg.setContent("Hello World, I'm at "+myPosition);
-
-			List<AbstractDedaleAgent> agents =((ExploreSoloAgent)this.myAgent).getYellowpage().getOtherAgents((AbstractDedaleAgent) this.myAgent);
+			try {
+				this.myAgent.doWait(100);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
-			for(AbstractDedaleAgent a:agents) {
-				msg.addReceiver(new AID(a.getLocalName(),AID.ISLOCALNAME));
+			System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
+
+			List<String> agents =this.agent.getYellowpage().getOtherAgents(this.agent);
+			
+			ACLMessage msg=new ACLMessage(ACLMessage.REQUEST);
+			msg.setSender(this.myAgent.getAID());
+			msg.setProtocol("Stop");
+			
+			for(String a:agents) {
+				if(this.agent.getConversationID(a)>=0) {
+					msg.addReceiver(new AID(a,AID.ISLOCALNAME));
+				}
 			}
 
 			//Mandatory to use this method (it takes into account the environment to decide if someone is reachable or not)
-			((AbstractDedaleAgent)this.myAgent).sendMessage(msg);
+			this.agent.sendMessage(msg);
 			this.lastPos=myPosition;
+			
+		}
+	}
+	
+	protected void getAnswer() {
+		
+		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), MessageTemplate.MatchProtocol("hasStoped"));
+
+		final ACLMessage msg = this.myAgent.receive(msgTemplate);
+		if (msg != null) {
+			
+			agent.newConversation(msg.getSender().getLocalName());
+			agent.getExplo().block();
+			System.out.println("confirmation");
+			
 		}
 	}
 

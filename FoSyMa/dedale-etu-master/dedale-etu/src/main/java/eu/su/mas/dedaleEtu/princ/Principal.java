@@ -10,6 +10,7 @@ import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyMovingAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyTankerAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyWumpusShift;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
+import eu.su.mas.dedaleEtu.mas.knowledge.YellowPage;
 import eu.su.mas.dedale.mas.agents.GateKeeperAgent;
 
 
@@ -270,6 +271,8 @@ public class Principal {
 			}
 
 		}
+		
+		YellowPage.getinstance();
 		
 		
 		/************************************************************************************************

@@ -19,7 +19,7 @@ import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
  * @author Cédric Herpson
  *
  */
-public class ReceiveMessageBehaviour extends SimpleBehaviour{
+public class ReceiveMessageBehaviour extends CustomCommunicationBehaviour{
 
 	private static final long serialVersionUID = 9088209402507795289L;
 
@@ -37,21 +37,21 @@ public class ReceiveMessageBehaviour extends SimpleBehaviour{
 	}
 
 
-	public void action() {
+	protected void getAnswer() {
 		//1) receive the message
-		final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
-		
-		ExploreSoloAgent agent = (ExploreSoloAgent) this.myAgent;
+		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.INFORM), MessageTemplate.MatchProtocol("map"));
 
 		final ACLMessage msg = this.myAgent.receive(msgTemplate);
+		
 		if (msg != null) {		
+			
 			System.out.println(this.myAgent.getLocalName()+"<----Result received from "+msg.getSender().getLocalName());
 			try {
 				HashMap<String,Object> truc = (HashMap<String, Object>) msg.getContentObject();	
-				agent.getSolo().mergeMap((List<String>)truc.get("open"),(Set<String>)truc.get("closed"),(List<String>)truc.get("edges"));
-				agent.getSolo().restart();
+				agent.getMapping().mergeMap((List<String>)truc.get("open"),(Set<String>)truc.get("closed"),(List<String>)truc.get("edges"));
+				agent.getExplo().restart();
 				
-				agent.newCoolDown();
+				agent.endConversation(msg.getSender().getLocalName());
 				
 			} catch (UnreadableException e) {
 				// TODO Auto-generated catch block
