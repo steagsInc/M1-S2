@@ -68,37 +68,6 @@ public class ExploSoloBehaviour extends CustomExplorationBehaviour {
 			}else {
 				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
 			}
-				
-			/***************************************************
-			** 		ADDING the API CALL to illustrate their use **
-			*****************************************************/
-
-			//list of observations associated to the currentPosition
-			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
-			//System.out.println(this.myAgent.getLocalName()+" - State of the observations : "+lobs);
-			
-			//example related to the use of the backpack for the treasure hunt
-			/*
-			Boolean b=false;
-			for(Couple<Observation,Integer> o:lObservations){
-				switch (o.getLeft()) {
-				case DIAMOND:case GOLD:
-
-					System.out.println(this.myAgent.getLocalName()+" - My treasure type is : "+((AbstractDedaleAgent) this.myAgent).getMyTreasureType());
-					System.out.println(this.myAgent.getLocalName()+" - My current backpack capacity is:"+ ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
-					System.out.println(this.myAgent.getLocalName()+" - My expertise is: "+((AbstractDedaleAgent) this.myAgent).getMyExpertise());
-					System.out.println(this.myAgent.getLocalName()+" - I try to open the safe: "+((AbstractDedaleAgent) this.myAgent).openLock(Observation.GOLD));
-					System.out.println(this.myAgent.getLocalName()+" - Value of the treasure on the current position: "+o.getLeft() +": "+ o.getRight());
-					System.out.println(this.myAgent.getLocalName()+" - The agent grabbed : "+((AbstractDedaleAgent) this.myAgent).pick());
-					System.out.println(this.myAgent.getLocalName()+" - the remaining backpack capacity is: "+ ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
-					b=true;
-					break;
-				default:
-					break;
-				}
-			}
-			
-			*/
 		}
 
 	}

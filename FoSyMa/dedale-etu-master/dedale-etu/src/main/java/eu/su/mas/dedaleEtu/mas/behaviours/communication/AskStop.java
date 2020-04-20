@@ -32,6 +32,8 @@ public class AskStop extends CustomCommunicationBehaviour{
 	 */
 	private String lastPos;
 	
+	private boolean finished = false;
+	
 	public AskStop (final Agent myagent) {
 		super(myagent);
 		this.lastPos="";
@@ -67,6 +69,11 @@ public class AskStop extends CustomCommunicationBehaviour{
 			this.lastPos=myPosition;
 			
 		}
+		
+		if(this.agent.getYellowpage().getOtherAgents(this.agent).isEmpty()) {
+			//ne spam pas s'il est tout seul
+			finished = true;
+		}
 	}
 	
 	protected void getAnswer() {
@@ -86,6 +93,6 @@ public class AskStop extends CustomCommunicationBehaviour{
 	@Override
 	public boolean done() {
 		// TODO Auto-generated method stub
-		return false;
+		return finished;
 	}
 }

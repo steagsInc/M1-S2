@@ -31,7 +31,6 @@ import jade.core.behaviours.Behaviour;
 public abstract class CustomAgent extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -6431752665590433727L;
-	protected MapRepresentation myMap;
 	protected MappingBehaviour mapping;
 	public MappingBehaviour getMapping() {
 		return mapping;
@@ -49,7 +48,7 @@ public abstract class CustomAgent extends AbstractDedaleAgent {
 
 		super.setup();
 		
-		this.mapping = new MappingBehaviour(this,this.myMap);
+		this.mapping = new MappingBehaviour(this);
 		this.yellowpage = YellowPage.getinstance();
 		this.yellowpage.register(this);
 		lb.add(this.mapping);

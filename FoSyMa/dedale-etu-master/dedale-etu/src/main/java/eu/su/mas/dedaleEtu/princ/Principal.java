@@ -10,6 +10,7 @@ import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyMovingAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyTankerAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyWumpusShift;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.RandomPatrolAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.YellowPage;
 import eu.su.mas.dedale.mas.agents.GateKeeperAgent;
 
@@ -293,18 +294,18 @@ public class Principal {
 //		 * GOLEM
 //		 *********/
 //		//1) Get the container where the agent will appear
-//		c = containerList.get(ConfigurationFile.LOCAL_CONTAINER2_NAME);
-//		Assert.assertNotNull("This container does not exist",c);
+		c = containerList.get(ConfigurationFile.LOCAL_CONTAINER2_NAME);
+		Assert.assertNotNull("This container does not exist",c);
 //		
 //		//2) Give the name of your agent, MUST be the same as the one given in the entities file.
-//		agentName="Golem";
+		agentName="Golem";
 //		
 //		//3) If you want to give specific parameters to your agent, add them here
-//		Object [] entityParameters={"My parameters"};
+		Object [] entityParameters={"My parameters"};
 //		
 //		//4) Give the class name of your agent to let the system instantiate it
-//		ag=createNewDedaleAgent(c, agentName, DummyWumpusShift.class.getName(), entityParameters);
-//		agentList.add(ag);	
+		ag=createNewDedaleAgent(c, agentName, DummyWumpusShift.class.getName(), entityParameters);
+		agentList.add(ag);	
 //		
 //		
 //		/*********
@@ -392,12 +393,13 @@ public class Principal {
 		Object [] entityParametersExplo1={"My parameters"};
 		
 		//4) Give the class name of your agent to let the system instantiate it
-		ag=createNewDedaleAgent(c, agentName, ExploreSoloAgent.class.getName(), entityParametersExplo1);//
+		ag=createNewDedaleAgent(c, agentName, RandomPatrolAgent.class.getName(), entityParametersExplo1);//
 		agentList.add(ag);
 		
 		/*********
 		 * AGENT Explo2
 		 *********/
+		/*
 		//1) Get the container where the agent will appear
 		c = containerList.get(ConfigurationFile.LOCAL_CONTAINER_NAME);
 		Assert.assertNotNull("This container does not exist",c);
@@ -412,6 +414,7 @@ public class Principal {
 		//ag=createNewDedaleAgent(c, agentName, DummyMovingAgent.class.getName(), entityParametersExplo2);//ExploreSoloAgent
 		ag=createNewDedaleAgent(c, agentName, ExploreSoloAgent.class.getName(), entityParametersExplo2);
 		agentList.add(ag);
+		*/
 //		
 		
 		/*********

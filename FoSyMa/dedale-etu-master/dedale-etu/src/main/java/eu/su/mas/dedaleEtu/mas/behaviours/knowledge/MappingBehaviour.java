@@ -53,9 +53,8 @@ public class MappingBehaviour extends SimpleBehaviour {
 	private String nextNode = null;
 
 
-	public MappingBehaviour(final AbstractDedaleAgent myagent, MapRepresentation myMap) {
+	public MappingBehaviour(final AbstractDedaleAgent myagent) {
 		super(myagent);
-		this.myMap=myMap;
 		this.openNodes=new ArrayList<String>();
 		this.closedNodes=new HashSet<String>();
 	}
@@ -168,5 +167,11 @@ public class MappingBehaviour extends SimpleBehaviour {
 	
 	public List<String> getEdges() {
 		return myMap.getEdges();
+	}
+	
+	public MapRepresentation getMyMap() {
+		if(this.myMap==null)
+			this.myMap= new MapRepresentation();
+		return myMap;
 	}
 }
