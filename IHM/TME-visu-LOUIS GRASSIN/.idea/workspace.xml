@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="123e8627-5d69-4991-86f7-f1ab216c100b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/resources/treasureHunt/anyMap-hunt-1golem1agent-entities" beforeDir="false" afterPath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/resources/treasureHunt/anyMap-hunt-1golem1agent-entities" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/mas/agents/dummies/CustomAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/mas/agents/dummies/CustomAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/mas/behaviours/communication/AskStop.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/mas/behaviours/communication/AskStop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/mas/behaviours/exploration/ExploSoloBehaviour.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/mas/behaviours/exploration/ExploSoloBehaviour.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/mas/behaviours/knowledge/MappingBehaviour.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/mas/behaviours/knowledge/MappingBehaviour.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/princ/ConfigurationFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/princ/ConfigurationFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/princ/Principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../FoSyMa/dedale-etu-master/dedale-etu/src/main/java/eu/su/mas/dedaleEtu/princ/Principal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/horizon_graph_part1.py" beforeDir="false" afterPath="$PROJECT_DIR$/horizon_graph_part1.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,8 +16,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/horizon_graph_part1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="344" selection-start-line="344" selection-end-line="344" />
+            <state relative-caret-position="185">
+              <caret line="367" column="48" selection-start-line="367" selection-start-column="48" selection-end-line="367" selection-end-column="48" />
               <folding>
                 <element signature="e#3#32#0" expanded="true" />
               </folding>
@@ -64,6 +59,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -75,10 +71,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/horizon_graph_part1.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -155,8 +151,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/horizon_graph_part1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="344" selection-start-line="344" selection-end-line="344" />
+        <state relative-caret-position="185">
+          <caret line="367" column="48" selection-start-line="367" selection-start-column="48" selection-end-line="367" selection-end-column="48" />
           <folding>
             <element signature="e#3#32#0" expanded="true" />
           </folding>

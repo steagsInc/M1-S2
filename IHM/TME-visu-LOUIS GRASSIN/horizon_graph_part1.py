@@ -334,9 +334,9 @@ class StackedMirroredAreaTimeSerieVisu( MirroredAreaTimeSerieVisu ) :
 	def modulo_value(self,y, ref, delta):
 
 		if y < 0:
-			return abs((ref + y)) % delta
+			return round(abs(abs(y)-ref) % delta,1)
 		else:
-			return abs((y - ref )) % delta
+			return round(abs(y - ref ) % delta, 1)
 
 	def crossed_bands(self,y1,y2, ref, delta):
 
@@ -359,13 +359,13 @@ class StackedMirroredAreaTimeSerieVisu( MirroredAreaTimeSerieVisu ) :
 	def y_interstected_line(self,prev_band, cur_band, ref, delta):
 
 		if 0 < prev_band < cur_band:
-			return ref + prev_band * delta
+			return ref + prev_band * delta +0.01
 		elif 0 < cur_band < prev_band:
-			return ref + prev_band * delta - cur_band*delta
+			return ref + prev_band * delta - cur_band*delta +0.01
 		elif 0 > cur_band > prev_band:
-			return ref + prev_band * delta - cur_band*delta
+			return ref + prev_band * delta - cur_band*delta +0.01
 		elif 0 > prev_band > cur_band:
-			return ref + prev_band * delta
+			return ref + prev_band * delta +0.01
 		else :
 			return ref
 
@@ -397,19 +397,12 @@ class StackedMirroredAreaTimeSerieVisu( MirroredAreaTimeSerieVisu ) :
 				if len(cb)>1:
 					for ib in range(len(cb)-1):
 						y_inter = round(self.y_interstected_line(cb[ib],cb[ib+1],reference,delta),2)
-						x_inter = self.x_intersection(y_inter, x[i], y[i], x[i + 1], y[i + 1])
+						x_inter = round(self.x_intersection(y_inter, x[i], y[i], x[i + 1], y[i + 1]),2)
+						print(y_inter,x_inter)
 						if x_inter > 0 and x_inter < x[-1]:
 							index = len(np.where(x_mod < x_inter)[0])
 							x_mod = np.insert(x_mod, index, x_inter)
 							y_mod = np.insert(y_mod, index, y_inter)
-							print("prout")
-							print(y_inter)
-							print(self.modulo_value(y_inter,reference,delta))
-							print(self.band_from(y_inter, reference, delta))
-							print("0",cb[ib])
-							print(self.estimate_value_for_given_band(y_inter,cb[ib],reference,delta))
-							print("1",cb[ib+1])
-							print(self.estimate_value_for_given_band(y_inter, cb[ib+1], reference, delta))
 
 
 		band = max(self.band_from(max(y),reference,delta),abs(self.band_from(min(y),reference,delta)))
