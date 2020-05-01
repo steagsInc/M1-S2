@@ -9,8 +9,8 @@ import eu.su.mas.dedaleEtu.mas.behaviours.communication.AskStop;
 import eu.su.mas.dedaleEtu.mas.behaviours.communication.ReceiveMap;
 import eu.su.mas.dedaleEtu.mas.behaviours.communication.SendMap;
 import eu.su.mas.dedaleEtu.mas.behaviours.communication.Startingconversation;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploration.ExploDuoBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.exploration.ExploSoloBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploration.RandomPatrolBehaviour;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.YellowPage;
 import jade.core.behaviours.Behaviour;
@@ -26,15 +26,15 @@ import jade.core.behaviours.Behaviour;
  *
  */
 
-public class RandomPatrolAgent extends CustomAgent {
+public class ExploreDuoAgent extends CustomAgent {
 
-	private static final long serialVersionUID = -6431752665590433727L;
+	private static final long serialVersionUID = -6431752455590433727L;
 	
 	protected void setup(){
 
 		super.setup();
 		
-	this.explo = new RandomPatrolBehaviour(this,this.mapping);
+		this.explo = new ExploDuoBehaviour(this,this.mapping);
 		lb.add(this.explo);
 		
 		addBehaviour(new startMyBehaviours(this,lb));

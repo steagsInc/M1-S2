@@ -9,6 +9,7 @@ import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyCollectorAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyMovingAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyTankerAgent;
 import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyWumpusShift;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreDuoAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.RandomPatrolAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.YellowPage;
@@ -293,6 +294,7 @@ public class Principal {
 //		/*********
 //		 * GOLEM
 //		 *********/
+		/*
 //		//1) Get the container where the agent will appear
 		c = containerList.get(ConfigurationFile.LOCAL_CONTAINER2_NAME);
 		Assert.assertNotNull("This container does not exist",c);
@@ -305,7 +307,7 @@ public class Principal {
 //		
 //		//4) Give the class name of your agent to let the system instantiate it
 		ag=createNewDedaleAgent(c, agentName, DummyWumpusShift.class.getName(), entityParameters);
-		agentList.add(ag);	
+		agentList.add(ag);
 //		
 //		
 //		/*********
@@ -393,13 +395,13 @@ public class Principal {
 		Object [] entityParametersExplo1={"My parameters"};
 		
 		//4) Give the class name of your agent to let the system instantiate it
-		ag=createNewDedaleAgent(c, agentName, RandomPatrolAgent.class.getName(), entityParametersExplo1);//
+		ag=createNewDedaleAgent(c, agentName, ExploreDuoAgent.class.getName(), entityParametersExplo1);//
 		agentList.add(ag);
 		
 		/*********
 		 * AGENT Explo2
 		 *********/
-		/*
+		
 		//1) Get the container where the agent will appear
 		c = containerList.get(ConfigurationFile.LOCAL_CONTAINER_NAME);
 		Assert.assertNotNull("This container does not exist",c);
@@ -412,9 +414,9 @@ public class Principal {
 		
 		//4) Give the class name of your agent to let the system instantiate it
 		//ag=createNewDedaleAgent(c, agentName, DummyMovingAgent.class.getName(), entityParametersExplo2);//ExploreSoloAgent
-		ag=createNewDedaleAgent(c, agentName, ExploreSoloAgent.class.getName(), entityParametersExplo2);
+		ag=createNewDedaleAgent(c, agentName, ExploreDuoAgent.class.getName(), entityParametersExplo2);
 		agentList.add(ag);
-		*/
+		
 //		
 		
 		/*********
@@ -578,6 +580,7 @@ public class Principal {
 	 */
 	private static AgentController createNewDedaleAgent(ContainerController initialContainer, String agentName,String className, Object[] additionnalParameters){
 		//Object[] objtab=new Object[]{env,agentName};//used to give informations to the agent
+		System.out.println(ConfigurationFile.INSTANCE_CONFIGURATION_ENTITIES);
 		Object[] objtab=AbstractDedaleAgent.loadEntityCaracteristics(agentName,ConfigurationFile.INSTANCE_CONFIGURATION_ENTITIES);
 		Object []res2=merge(objtab,additionnalParameters);
 

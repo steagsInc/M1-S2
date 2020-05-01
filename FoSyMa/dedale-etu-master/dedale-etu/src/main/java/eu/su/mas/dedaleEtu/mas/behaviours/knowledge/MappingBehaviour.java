@@ -3,6 +3,7 @@ package eu.su.mas.dedaleEtu.mas.behaviours.knowledge;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -45,10 +46,14 @@ public class MappingBehaviour extends SimpleBehaviour {
 	 * Nodes known but not yet visited
 	 */
 	private List<String> openNodes;
+	
+	private List<String> objectiveNodes;
 	/**
 	 * Visited nodes
 	 */
 	private Set<String> closedNodes;
+	
+	private HashMap<String, String> agentNodes;
 	
 	private String nextNode = null;
 
@@ -56,7 +61,9 @@ public class MappingBehaviour extends SimpleBehaviour {
 	public MappingBehaviour(final AbstractDedaleAgent myagent) {
 		super(myagent);
 		this.openNodes=new ArrayList<String>();
+		this.objectiveNodes=null;
 		this.closedNodes=new HashSet<String>();
+		this.agentNodes= new HashMap<String,String>();
 	}
 	
 	public void mergeMap(List<String> openNodes,Set<String> closedNodes,List<String> edges) {
@@ -148,13 +155,36 @@ public class MappingBehaviour extends SimpleBehaviour {
 		return finished;
 	}
 	
+	public void updateAgentPos(String agent,String pos) {
+		this.agentNodes.put(agent, pos);
+	}
+	
 	public String getNextNode(String position) {
 		
 		if(this.nextNode!=null) return this.nextNode;
 		
 		if(this.openNodes.isEmpty()) return "";
 		
-		return this.myMap.getShortestPath(position, this.openNodes.get(0)).get(0);
+		return this.myMap.getShortestPath(position, this.openNodes.get(0),this.agentNodes.values()).get(0);
+	}
+	
+	public String getNextObjectif(String position) {
+		
+		if(this.nextNode!=null) return this.nextNode;
+		
+		if(this.objectiveNodes==null) return this.getNextNode(position);
+		
+		if(this.objectiveNodes.isEmpty()) return "";
+		
+		return this.myMap.getShortestPath(position, this.objectiveNodes.get(0),this.agentNodes.values()).get(0);
+	}
+	
+	public String getPath(String position,String node) {
+		List<String> path = this.myMap.getShortestPath(position, node);
+		
+		if (path.size()==0) return "";
+		
+		return path.get(0);
 	}
 
 	public List<String> getOpenNodes() {
@@ -167,6 +197,18 @@ public class MappingBehaviour extends SimpleBehaviour {
 	
 	public List<String> getEdges() {
 		return myMap.getEdges();
+	}
+	
+	public List<String> setupObjectives() {
+		
+		this.objectiveNodes = new ArrayList<String>(this.openNodes.subList(0, this.openNodes.size()/2));
+		
+		return new ArrayList<String>(this.openNodes.subList(this.openNodes.size()/2,this.openNodes.size()));
+		
+	}
+	
+	public void setObjectives(List<String> objectives) {
+		this.objectiveNodes = objectives;
 	}
 	
 	public MapRepresentation getMyMap() {

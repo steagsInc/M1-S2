@@ -6,7 +6,7 @@ import java.util.List;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
 import eu.su.mas.dedaleEtu.mas.behaviours.communication.AskStop;
-import eu.su.mas.dedaleEtu.mas.behaviours.communication.ReceiveMessageBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.communication.ReceiveMap;
 import eu.su.mas.dedaleEtu.mas.behaviours.communication.SendMap;
 import eu.su.mas.dedaleEtu.mas.behaviours.communication.Startingconversation;
 import eu.su.mas.dedaleEtu.mas.behaviours.exploration.ExploSoloBehaviour;

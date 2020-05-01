@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploration.ExploDuoBehaviour;
 
 /**
  * This behaviour is a one Shot.
@@ -19,7 +22,7 @@ import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
  * @author Cédric Herpson
  *
  */
-public class ReceiveMessageBehaviour extends CustomCommunicationBehaviour{
+public class ReceiveMap extends CustomCommunicationBehaviour{
 
 	private static final long serialVersionUID = 9088209402507795289L;
 
@@ -31,7 +34,7 @@ public class ReceiveMessageBehaviour extends CustomCommunicationBehaviour{
 	 * It receives a message tagged with an inform performative, print the content in the console and destroy itlself
 	 * @param myagent
 	 */
-	public ReceiveMessageBehaviour(final Agent myagent) {
+	public ReceiveMap(final Agent myagent) {
 		super(myagent);
 
 	}
@@ -49,6 +52,19 @@ public class ReceiveMessageBehaviour extends CustomCommunicationBehaviour{
 			try {
 				HashMap<String,Object> truc = (HashMap<String, Object>) msg.getContentObject();	
 				agent.getMapping().mergeMap((List<String>)truc.get("open"),(Set<String>)truc.get("closed"),(List<String>)truc.get("edges"));
+				
+				if(agent.getExplo() instanceof ExploDuoBehaviour) {
+					agent.getMapping().setObjectives((List<String>)truc.get("objectives"));
+					((ExploDuoBehaviour)agent.getExplo()).setRdv(((AbstractDedaleAgent)this.myAgent).getCurrentPosition());
+				}
+				
+				ACLMessage answer=new ACLMessage(ACLMessage.CONFIRM);
+				answer.setSender(this.myAgent.getAID());
+				answer.setProtocol("MapReceived");
+				answer.addReceiver(new AID(msg.getSender().getLocalName(),AID.ISLOCALNAME));
+				
+				this.agent.sendMessage(answer);
+				
 				agent.getExplo().restart();
 				
 				agent.endConversation(msg.getSender().getLocalName());

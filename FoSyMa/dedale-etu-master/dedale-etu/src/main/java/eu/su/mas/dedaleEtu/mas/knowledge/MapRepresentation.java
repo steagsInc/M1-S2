@@ -2,6 +2,7 @@ package eu.su.mas.dedaleEtu.mas.knowledge;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.EdgeRejectedException;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.Graphs;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.fx_viewer.FxViewer;
@@ -118,6 +120,29 @@ public class MapRepresentation implements Serializable {
 		dijkstra.setSource(g.getNode(idFrom));
 		dijkstra.compute();//compute the distance to all nodes from idFrom
 		List<Node> path=dijkstra.getPath(g.getNode(idTo)).getNodePath(); //the shortest path from idFrom to idTo
+		Iterator<Node> iter=path.iterator();
+		while (iter.hasNext()){
+			shortestPath.add(iter.next().getId());
+		}
+		dijkstra.clear();
+		shortestPath.remove(0);//remove the current position
+		return shortestPath;
+	}
+	
+	public List<String> getShortestPath(String idFrom,String idTo,Collection<String> collection){
+		List<String> shortestPath=new ArrayList<String>();
+		
+		Graph cg = Graphs.clone(this.g);
+		
+		for(String n:collection) {
+			cg.removeNode(n);
+		}
+
+		Dijkstra dijkstra = new Dijkstra();//number of edge
+		dijkstra.init(cg);
+		dijkstra.setSource(cg.getNode(idFrom));
+		dijkstra.compute();//compute the distance to all nodes from idFrom
+		List<Node> path=dijkstra.getPath(cg.getNode(idTo)).getNodePath(); //the shortest path from idFrom to idTo
 		Iterator<Node> iter=path.iterator();
 		while (iter.hasNext()){
 			shortestPath.add(iter.next().getId());

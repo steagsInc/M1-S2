@@ -20,6 +20,8 @@ public class YellowPage {
 	
 	public void register(AbstractDedaleAgent agent) {
 		this.agents.add(agent.getLocalName());
+		System.out.println("dsqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+		System.out.println(agent.getLocalName());
 	}
 	
 	public List<String> getOtherAgents(AbstractDedaleAgent agent){

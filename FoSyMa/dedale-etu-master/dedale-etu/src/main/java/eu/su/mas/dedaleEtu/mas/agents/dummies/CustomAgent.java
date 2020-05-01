@@ -7,9 +7,11 @@ import java.util.List;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
 import eu.su.mas.dedaleEtu.mas.behaviours.communication.AskStop;
-import eu.su.mas.dedaleEtu.mas.behaviours.communication.ReceiveMessageBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.communication.ReceiveMap;
 import eu.su.mas.dedaleEtu.mas.behaviours.communication.SendMap;
 import eu.su.mas.dedaleEtu.mas.behaviours.communication.Startingconversation;
+import eu.su.mas.dedaleEtu.mas.behaviours.communication.position.BroadcastPosition;
+import eu.su.mas.dedaleEtu.mas.behaviours.communication.position.ReceivePosition;
 import eu.su.mas.dedaleEtu.mas.behaviours.exploration.CustomExplorationBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.exploration.ExploSoloBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.knowledge.MappingBehaviour;
@@ -52,10 +54,12 @@ public abstract class CustomAgent extends AbstractDedaleAgent {
 		this.yellowpage = YellowPage.getinstance();
 		this.yellowpage.register(this);
 		lb.add(this.mapping);
+		lb.add(new BroadcastPosition(this));
+		lb.add(new ReceivePosition(this));
 		lb.add(new AskStop(this));
 		lb.add(new SendMap(this));
 		lb.add(new Startingconversation(this));
-		lb.add(new ReceiveMessageBehaviour(this));
+		lb.add(new ReceiveMap(this));
 		
 		
 		System.out.println("custom");

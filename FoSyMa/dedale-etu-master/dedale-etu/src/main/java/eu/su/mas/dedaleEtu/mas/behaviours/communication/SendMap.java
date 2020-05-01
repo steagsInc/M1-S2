@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
+import eu.su.mas.dedaleEtu.mas.behaviours.exploration.ExploDuoBehaviour;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
@@ -56,6 +57,7 @@ public class SendMap extends CustomCommunicationBehaviour{
 			truc.put("open", agent.getMapping().getOpenNodes());
 			truc.put("closed", agent.getMapping().getClosedNodes());
 			truc.put("edges", agent.getMapping().getEdges());
+			if(agent.getExplo() instanceof ExploDuoBehaviour) truc.put("objectives", agent.getMapping().setupObjectives());
 				
 			//System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to send a map");
 			
@@ -73,6 +75,26 @@ public class SendMap extends CustomCommunicationBehaviour{
 			this.agent.sendMessage(msg);
 			
 		}
+	}
+	
+	protected void getAnswer() {
+		//1) receive the message
+		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), MessageTemplate.MatchProtocol("MapReceived"));
+
+		final ACLMessage msg = this.myAgent.receive(msgTemplate);
+		
+		if (msg != null) {
+			
+			if(agent.getExplo() instanceof ExploDuoBehaviour) ((ExploDuoBehaviour)agent.getExplo()).setRdv(((AbstractDedaleAgent)this.myAgent).getCurrentPosition());
+			
+			agent.getExplo().restart();
+			
+			agent.endConversation(msg.getSender().getLocalName());
+			
+			System.out.println("Map confirmed");
+			
+		}
+		
 	}
 
 	@Override

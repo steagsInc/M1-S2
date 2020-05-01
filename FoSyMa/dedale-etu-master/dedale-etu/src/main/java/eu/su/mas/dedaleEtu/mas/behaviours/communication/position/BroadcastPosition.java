@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.communication;
+package eu.su.mas.dedaleEtu.mas.behaviours.communication.position;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
+import eu.su.mas.dedaleEtu.mas.behaviours.communication.CustomCommunicationBehaviour;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
@@ -18,7 +19,7 @@ import jade.lang.acl.MessageTemplate;
  * @author hc
  *
  */
-public class AskStop extends CustomCommunicationBehaviour{
+public class BroadcastPosition extends CustomCommunicationBehaviour{
 
 	/**
 	 * 
@@ -34,7 +35,7 @@ public class AskStop extends CustomCommunicationBehaviour{
 	
 	private boolean finished = false;
 	
-	public AskStop (final Agent myagent) {
+	public BroadcastPosition (final Agent myagent) {
 		super(myagent);
 		this.lastPos="";
 	}
@@ -42,7 +43,7 @@ public class AskStop extends CustomCommunicationBehaviour{
 	protected void sendMessage() {
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 
-		if (myPosition!=""){
+		if (myPosition!="" && myPosition!=this.lastPos){
 			
 			try {
 				this.myAgent.doWait(200);
@@ -54,9 +55,10 @@ public class AskStop extends CustomCommunicationBehaviour{
 
 			List<String> agents =this.agent.getYellowpage().getOtherAgents(this.agent);
 			
-			ACLMessage msg=new ACLMessage(ACLMessage.REQUEST);
+			ACLMessage msg=new ACLMessage(ACLMessage.INFORM);
 			msg.setSender(this.myAgent.getAID());
-			msg.setProtocol("Stop");
+			msg.setProtocol("Pos");
+			msg.setContent(myPosition);
 			
 			for(String a:agents) {
 				if(this.agent.getConversationID(a)>=0) {
