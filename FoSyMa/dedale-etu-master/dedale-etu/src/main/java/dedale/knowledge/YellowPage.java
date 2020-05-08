@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.knowledge;
+package dedale.knowledge;
 
 import java.util.ArrayList;
 import java.util.Arrays;

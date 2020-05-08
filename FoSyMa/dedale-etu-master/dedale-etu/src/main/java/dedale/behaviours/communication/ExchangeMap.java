@@ -1,26 +1,31 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.communication;
+package dedale.behaviours.communication;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+
+import dedale.agents.CustomAgent;
+import dedale.agents.ExploreSoloAgent;
+import dedale.behaviours.exploration.ExploDuoBehaviour;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploration.ExploDuoBehaviour;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 
 /**
  * This example behaviour try to send a hello message (every 3s maximum) to agents Collect2 Collect1
  * @author hc
  *
  */
-public class SendMap extends CustomCommunicationBehaviour{
+public class ExchangeMap extends OneShotBehaviour{
 
 	/**
 	 * 
@@ -32,21 +37,24 @@ public class SendMap extends CustomCommunicationBehaviour{
 	 * @param myagent the agent who posses the behaviour
 	 *  
 	 */
-	public SendMap (final Agent myagent) {
+	private CustomAgent agent;
+	
+	private int timeout = 10;
+	
+	public ExchangeMap (CustomAgent myagent) {
 		super(myagent);
+		this.agent = myagent;
+		
 	}
+	
+	public boolean answered = false;
+    public boolean getAnswer = false;
 
-	protected void sendMessage() {
+	protected void sendMap() {
 		
 		List<String> activeConversations = this.agent.getActiveConversations();
 		
 		if (!activeConversations.isEmpty()) {
-			
-			try {
-				this.myAgent.doWait(100);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			
 			ACLMessage msg=new ACLMessage(ACLMessage.INFORM);
 			msg.setSender(this.myAgent.getAID());
@@ -77,7 +85,42 @@ public class SendMap extends CustomCommunicationBehaviour{
 		}
 	}
 	
-	protected void getAnswer() {
+	protected void getMap() {
+		//1) receive the message
+		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.INFORM), MessageTemplate.MatchProtocol("map"));
+
+		final ACLMessage msg = this.myAgent.receive(msgTemplate);
+		
+		if (msg != null) {		
+			
+			System.out.println(this.myAgent.getLocalName()+"<----Result received from "+msg.getSender().getLocalName());
+			try {
+				HashMap<String,Object> truc = (HashMap<String, Object>) msg.getContentObject();	
+				agent.getMapping().mergeMap((List<String>)truc.get("open"),(Set<String>)truc.get("closed"),(List<String>)truc.get("edges"));
+				
+				if(agent.getExplo() instanceof ExploDuoBehaviour) {
+					agent.getMapping().setObjectives((List<String>)truc.get("objectives"));
+					((ExploDuoBehaviour)agent.getExplo()).setRdv(((AbstractDedaleAgent)this.myAgent).getCurrentPosition());
+				}
+				
+				ACLMessage answer=new ACLMessage(ACLMessage.CONFIRM);
+				answer.setSender(this.myAgent.getAID());
+				answer.setProtocol("MapReceived");
+				answer.addReceiver(new AID(msg.getSender().getLocalName(),AID.ISLOCALNAME));
+				
+				this.agent.sendMessage(answer);
+				
+				agent.endConversation(msg.getSender().getLocalName());
+				
+			} catch (UnreadableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			answered = true;
+		}
+	}
+	
+	protected void confirmMapReception() {
 		//1) receive the message
 		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), MessageTemplate.MatchProtocol("MapReceived"));
 
@@ -87,19 +130,32 @@ public class SendMap extends CustomCommunicationBehaviour{
 			
 			if(agent.getExplo() instanceof ExploDuoBehaviour) ((ExploDuoBehaviour)agent.getExplo()).setRdv(((AbstractDedaleAgent)this.myAgent).getCurrentPosition());
 			
-			agent.getExplo().restart();
-			
 			agent.endConversation(msg.getSender().getLocalName());
 			
 			System.out.println("Map confirmed");
-			
 		}
 		
 	}
-
+	
 	@Override
-	public boolean done() {
-		// TODO Auto-generated method stub
-		return false;
+	public void action() {
+		timeout--;
+		
+		System.out.println("conversation " + Integer.toString(timeout));
+		
+		sendMap();
+		getMap();
+		confirmMapReception();
+		
 	}
+	
+	@Override
+    public int onEnd() {
+        if(getAnswer || answered || timeout == 0){
+        	timeout=10;
+        	return 1;
+        }
+        return 0;
+    }
+
 }

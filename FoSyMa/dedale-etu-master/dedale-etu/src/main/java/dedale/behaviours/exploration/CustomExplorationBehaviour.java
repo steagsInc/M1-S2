@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.exploration;
+package dedale.behaviours.exploration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.Set;
 
 import dataStructures.tuple.Couple;
+import dedale.agents.ExploreSoloAgent;
+import dedale.knowledge.MapRepresentation;
+import dedale.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
-import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
-import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 
 
@@ -30,7 +31,7 @@ import jade.core.behaviours.SimpleBehaviour;
  * @author hc
  *
  */
-public abstract class CustomExplorationBehaviour extends SimpleBehaviour {
+public abstract class CustomExplorationBehaviour extends OneShotBehaviour {
 
 	public CustomExplorationBehaviour(final AbstractDedaleAgent myagent) {
 		super(myagent);

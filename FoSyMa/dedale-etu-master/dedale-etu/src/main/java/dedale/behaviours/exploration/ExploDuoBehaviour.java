@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.exploration;
+package dedale.behaviours.exploration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.Set;
 
 import dataStructures.tuple.Couple;
+import dedale.agents.CustomAgent;
+import dedale.agents.ExploreSoloAgent;
+import dedale.behaviours.knowledge.MappingBehaviour;
+import dedale.knowledge.MapRepresentation;
+import dedale.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
-import eu.su.mas.dedaleEtu.mas.behaviours.knowledge.MappingBehaviour;
-import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
-import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SimpleBehaviour;
 
@@ -31,15 +32,17 @@ import jade.core.behaviours.SimpleBehaviour;
  * @author hc
  *
  */
-public class ExploSoloBehaviour extends CustomExplorationBehaviour {
+public class ExploDuoBehaviour extends CustomExplorationBehaviour {
 
-	private static final long serialVersionUID = 8567689731496787661L;
+	private static final long serialVersionUID = 8567689712496787661L;
 
 	private boolean finished = false;
 
 	private MappingBehaviour mapping;
+	
+	private String rdv = null;
 
-	public ExploSoloBehaviour(final AbstractDedaleAgent myagent, MappingBehaviour mapping) {
+	public ExploDuoBehaviour(final AbstractDedaleAgent myagent, MappingBehaviour mapping) {
 		super(myagent);
 		this.mapping=mapping;
 	}
@@ -51,8 +54,6 @@ public class ExploSoloBehaviour extends CustomExplorationBehaviour {
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 	
 		if (myPosition!=null){
-			//List of observable from the agent's current position
-			List<Couple<String,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();//myPosition
 
 			try {
 				this.myAgent.doWait(500);
@@ -60,10 +61,21 @@ public class ExploSoloBehaviour extends CustomExplorationBehaviour {
 				e.printStackTrace();
 			}
 
-			//2) get the surrounding nodes and, if not in closedNodes, add them to open nodes.
-			String nextNode=this.mapping.getNextNode(myPosition);
+			System.out.println("explo");
+			String nextNode=this.mapping.getNextObjectif(myPosition);
+			
+			System.out.println(nextNode);
 			
 			if (nextNode=="") {
+				if(this.rdv!=null && this.rdv != myPosition) {
+					nextNode=this.mapping.getPath(myPosition, this.rdv);
+					System.out.println("rdv");
+					((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+				}
+				else if(this.mapping.getOpenNodes().isEmpty()) {
+					finished = true;
+				}
+			} else if(nextNode=="" && rdv=="") {
 				finished = true;
 			}else {
 				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
@@ -73,7 +85,11 @@ public class ExploSoloBehaviour extends CustomExplorationBehaviour {
 	}
 
 	@Override
-	public boolean done() {
-		return finished;
+    public int onEnd() {
+        return 0;
+    }
+	
+	public void setRdv(String rdv) {
+		this.rdv = rdv;
 	}
 }

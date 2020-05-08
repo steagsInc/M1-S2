@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.knowledge;
+package dedale.knowledge;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -129,13 +129,21 @@ public class MapRepresentation implements Serializable {
 		return shortestPath;
 	}
 	
-	public List<String> getShortestPath(String idFrom,String idTo,Collection<String> collection){
+	public List<String> getShortestPath(String idFrom,String idTo,Collection<String> agentNodes){
 		List<String> shortestPath=new ArrayList<String>();
+		
+		//System.out.println(idFrom +" to --> "+idTo);
+		
+		if(idTo == null) return null;
+		
+		if(agentNodes.contains(idTo)) return null;
 		
 		Graph cg = Graphs.clone(this.g);
 		
-		for(String n:collection) {
-			cg.removeNode(n);
+		for(String n:agentNodes) {
+			if(cg.getNode(n)!=null && !n.equals(idFrom)) {
+				cg.removeNode(n);
+			}
 		}
 
 		Dijkstra dijkstra = new Dijkstra();//number of edge
@@ -148,6 +156,7 @@ public class MapRepresentation implements Serializable {
 			shortestPath.add(iter.next().getId());
 		}
 		dijkstra.clear();
+		if (shortestPath.size()==0) return null;
 		shortestPath.remove(0);//remove the current position
 		return shortestPath;
 	}

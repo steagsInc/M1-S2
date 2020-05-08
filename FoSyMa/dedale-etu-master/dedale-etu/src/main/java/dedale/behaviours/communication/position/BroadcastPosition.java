@@ -1,12 +1,13 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.communication.position;
+package dedale.behaviours.communication.position;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import dedale.agents.CustomAgent;
+import dedale.agents.ExploreSoloAgent;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
-import eu.su.mas.dedaleEtu.mas.behaviours.communication.CustomCommunicationBehaviour;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
@@ -19,7 +20,7 @@ import jade.lang.acl.MessageTemplate;
  * @author hc
  *
  */
-public class BroadcastPosition extends CustomCommunicationBehaviour{
+public class BroadcastPosition extends SimpleBehaviour{
 
 	/**
 	 * 
@@ -35,21 +36,18 @@ public class BroadcastPosition extends CustomCommunicationBehaviour{
 	
 	private boolean finished = false;
 	
-	public BroadcastPosition (final Agent myagent) {
+	protected CustomAgent agent;
+	
+	public BroadcastPosition (CustomAgent myagent) {
 		super(myagent);
-		this.lastPos="";
+		this.agent = myagent;
+		this.lastPos = "";
 	}
 
 	protected void sendMessage() {
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 
-		if (myPosition!="" && myPosition!=this.lastPos){
-			
-			try {
-				this.myAgent.doWait(200);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		if (myPosition!=""){
 			
 			//System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
 
@@ -80,14 +78,12 @@ public class BroadcastPosition extends CustomCommunicationBehaviour{
 	
 	protected void getAnswer() {
 		
-		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), MessageTemplate.MatchProtocol("hasStoped"));
+		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.INFORM), MessageTemplate.MatchProtocol("Pos"));
 
 		final ACLMessage msg = this.myAgent.receive(msgTemplate);
 		if (msg != null) {
 			
-			agent.newConversation(msg.getSender().getLocalName());
-			agent.getExplo().block();
-			System.out.println("confirmation");
+			this.agent.getMapping().updateAgentPos(msg.getSender().getLocalName(), msg.getContent());
 			
 		}
 	}
@@ -96,5 +92,12 @@ public class BroadcastPosition extends CustomCommunicationBehaviour{
 	public boolean done() {
 		// TODO Auto-generated method stub
 		return finished;
+	}
+
+	@Override
+	public void action() {
+		sendMessage();
+		getAnswer();
+		
 	}
 }

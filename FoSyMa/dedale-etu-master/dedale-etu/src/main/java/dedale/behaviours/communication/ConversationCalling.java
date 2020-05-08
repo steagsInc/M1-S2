@@ -1,13 +1,16 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.communication;
+package dedale.behaviours.communication;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import dedale.agents.CustomAgent;
+import dedale.agents.ExploreSoloAgent;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -18,7 +21,7 @@ import jade.lang.acl.MessageTemplate;
  * @author hc
  *
  */
-public class AskStop extends CustomCommunicationBehaviour{
+public class ConversationCalling extends OneShotBehaviour{
 
 	/**
 	 * 
@@ -31,26 +34,31 @@ public class AskStop extends CustomCommunicationBehaviour{
 	 *  
 	 */
 	private String lastPos;
+	protected CustomAgent agent;
 	
 	private boolean finished = false;
 	
-	public AskStop (final Agent myagent) {
+	public boolean answered = false;
+    public boolean getAnswer = false;
+	
+	public ConversationCalling (CustomAgent myagent) {
 		super(myagent);
 		this.lastPos="";
+		this.agent = myagent;
 	}
 
-	protected void sendMessage() {
+	protected void askConv() {
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 
 		if (myPosition!=""){
 			
+			//System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
+			
 			try {
-				this.myAgent.doWait(200);
+				this.myAgent.doWait(100);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			//System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
 
 			List<String> agents =this.agent.getYellowpage().getOtherAgents(this.agent);
 			
@@ -76,7 +84,30 @@ public class AskStop extends CustomCommunicationBehaviour{
 		}
 	}
 	
-	protected void getAnswer() {
+	protected void answerConv() {
+		
+		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchProtocol("Stop"));
+		
+		final ACLMessage msg = this.myAgent.receive(msgTemplate);
+		
+		if (msg != null) {		
+			//System.out.println(this.myAgent.getLocalName()+" <----Stop Request received from "+msg.getSender().getLocalName());
+			if( agent.getConversationID(msg.getSender().getLocalName())>=0) {
+				
+				agent.newConversation(msg.getSender().getLocalName());
+				
+				ACLMessage answer=new ACLMessage(ACLMessage.CONFIRM);
+				answer.setSender(this.myAgent.getAID());
+				answer.setProtocol("hasStoped");
+				answer.addReceiver(new AID(msg.getSender().getLocalName(),AID.ISLOCALNAME));
+				
+				this.agent.sendMessage(answer);
+				answered = true;
+			}
+		}
+	}
+	
+	protected void confirmConv() {
 		
 		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.CONFIRM), MessageTemplate.MatchProtocol("hasStoped"));
 
@@ -84,15 +115,19 @@ public class AskStop extends CustomCommunicationBehaviour{
 		if (msg != null) {
 			
 			agent.newConversation(msg.getSender().getLocalName());
-			agent.getExplo().block();
-			System.out.println("confirmation");
-			
+			getAnswer = true;
 		}
 	}
 
 	@Override
-	public boolean done() {
-		// TODO Auto-generated method stub
-		return finished;
+	public void action() {
+		askConv();
+		answerConv();
+		confirmConv();
 	}
+	
+	@Override
+    public int onEnd() {
+        return (getAnswer && answered) ? 1 : 0;
+    }
 }

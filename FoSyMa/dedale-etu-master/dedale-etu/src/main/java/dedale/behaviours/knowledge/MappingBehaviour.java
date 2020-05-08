@@ -1,21 +1,25 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.knowledge;
+package dedale.behaviours.knowledge;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.graphstream.graph.Node;
+
 import dataStructures.tuple.Couple;
+import dedale.agents.ExploreSoloAgent;
+import dedale.knowledge.MapRepresentation;
+import dedale.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
-import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
-import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 
 
@@ -31,7 +35,7 @@ import jade.core.behaviours.SimpleBehaviour;
  * @author hc
  *
  */
-public class MappingBehaviour extends SimpleBehaviour {
+public class MappingBehaviour extends OneShotBehaviour {
 
 	private static final long serialVersionUID = 8567689731496787661L;
 
@@ -54,6 +58,9 @@ public class MappingBehaviour extends SimpleBehaviour {
 	private Set<String> closedNodes;
 	
 	private HashMap<String, String> agentNodes;
+	
+	private String wumpusPos = null;
+	private String hunterName = null;
 	
 	private String nextNode = null;
 
@@ -113,15 +120,6 @@ public class MappingBehaviour extends SimpleBehaviour {
 			//List of observable from the agent's current position
 			List<Couple<String,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();//myPosition
 
-			/**
-			 * Just added here to let you see what the agent is doing, otherwise he will be too quick
-			 */
-			try {
-				this.myAgent.doWait(500);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
 			//1) remove the current node from openlist and add it to closedNodes.
 			this.closedNodes.add(myPosition);
 			this.openNodes.remove(myPosition);
@@ -142,47 +140,71 @@ public class MappingBehaviour extends SimpleBehaviour {
 						//the node exist, but not necessarily the edge
 						this.myMap.addEdge(myPosition, nodeId);
 					}
-					if (nextNode==null) nextNode=nodeId;
+					//if (nextNode==null) nextNode=nodeId;
 				}
 			}
 				
 			}
 
 		}
-
-	@Override
-	public boolean done() {
-		return finished;
-	}
 	
 	public void updateAgentPos(String agent,String pos) {
 		this.agentNodes.put(agent, pos);
 	}
 	
+	public void resetAgentPos() {
+		this.agentNodes.clear();
+	}
+	
+	private String getClosest(String position,List<String> nodes) {
+		
+		
+		String next = "";
+		Integer distance = 999;
+		
+		for(String n: nodes) {
+			List<String> path = this.myMap.getShortestPath(position, n,this.agentNodes.values());
+			if(path != null && path.size()<distance && path.size()!=0) {
+				next = path.get(0);
+				distance = path.size();
+			}
+		}
+		
+		this.resetAgentPos();
+		
+		return next;
+		
+	}
+	
 	public String getNextNode(String position) {
 		
-		if(this.nextNode!=null) return this.nextNode;
 		
 		if(this.openNodes.isEmpty()) return "";
 		
-		return this.myMap.getShortestPath(position, this.openNodes.get(0),this.agentNodes.values()).get(0);
+		return this.getClosest(position, this.openNodes);
 	}
 	
 	public String getNextObjectif(String position) {
 		
-		if(this.nextNode!=null) return this.nextNode;
 		
 		if(this.objectiveNodes==null) return this.getNextNode(position);
 		
+		if(this.objectiveNodes.contains(position)) this.objectiveNodes.remove(position);
+		
 		if(this.objectiveNodes.isEmpty()) return "";
 		
-		return this.myMap.getShortestPath(position, this.objectiveNodes.get(0),this.agentNodes.values()).get(0);
+		return this.getClosest(position, this.objectiveNodes);
 	}
 	
 	public String getPath(String position,String node) {
-		List<String> path = this.myMap.getShortestPath(position, node);
 		
-		if (path.size()==0) return "";
+		//System.out.println(position +" to --> "+node);
+		
+		List<String> path = this.myMap.getShortestPath(position, node,this.agentNodes.values());
+		
+		this.resetAgentPos();
+		
+		if (path == null || path.size()==0) return "";
 		
 		return path.get(0);
 	}
@@ -211,9 +233,43 @@ public class MappingBehaviour extends SimpleBehaviour {
 		this.objectiveNodes = objectives;
 	}
 	
+	public void setWumpusPos(String pos) {
+		this.wumpusPos = pos;
+	}
+	
+	public void setHunterName(String name) {
+		this.hunterName = name;
+	}
+	
+	
+	
+	public String getWumpusPos() {
+		return wumpusPos;
+	}
+
+	public String getHunterName() {
+		return hunterName;
+	}
+	
+	public String getAgentPos(String name) {
+		return this.agentNodes.get(name);
+	}
+	
+	public Collection<String> getAgentsPos(){
+		
+		//System.out.println(this.agentNodes);
+		
+		return this.agentNodes.values();
+	}
+
 	public MapRepresentation getMyMap() {
 		if(this.myMap==null)
 			this.myMap= new MapRepresentation();
 		return myMap;
 	}
+	
+	@Override
+    public int onEnd() {
+        return 0;
+    }
 }

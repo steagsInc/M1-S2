@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.exploration;
+package dedale.behaviours.exploration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,13 +9,12 @@ import java.util.List;
 import java.util.Set;
 
 import dataStructures.tuple.Couple;
+import dedale.agents.ExploreSoloAgent;
+import dedale.behaviours.knowledge.MappingBehaviour;
+import dedale.knowledge.MapRepresentation;
+import dedale.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.CustomAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
-import eu.su.mas.dedaleEtu.mas.behaviours.knowledge.MappingBehaviour;
-import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
-import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SimpleBehaviour;
 
@@ -32,17 +31,15 @@ import jade.core.behaviours.SimpleBehaviour;
  * @author hc
  *
  */
-public class ExploDuoBehaviour extends CustomExplorationBehaviour {
+public class ExploSoloBehaviour extends CustomExplorationBehaviour {
 
-	private static final long serialVersionUID = 8567689712496787661L;
+	private static final long serialVersionUID = 8567689731496787661L;
 
 	private boolean finished = false;
 
 	private MappingBehaviour mapping;
-	
-	private String rdv = "";
 
-	public ExploDuoBehaviour(final AbstractDedaleAgent myagent, MappingBehaviour mapping) {
+	public ExploSoloBehaviour(final AbstractDedaleAgent myagent, MappingBehaviour mapping) {
 		super(myagent);
 		this.mapping=mapping;
 	}
@@ -67,13 +64,6 @@ public class ExploDuoBehaviour extends CustomExplorationBehaviour {
 			String nextNode=this.mapping.getNextNode(myPosition);
 			
 			if (nextNode=="") {
-				if(this.rdv != myPosition) {
-					nextNode=this.mapping.getPath(myPosition, this.rdv);
-					System.out.println("rdv");
-					((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
-				}
-				System.out.println("prout");
-			} else if(nextNode=="" && rdv=="") {
 				finished = true;
 			}else {
 				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
@@ -83,11 +73,7 @@ public class ExploDuoBehaviour extends CustomExplorationBehaviour {
 	}
 
 	@Override
-	public boolean done() {
-		return finished;
-	}
-	
-	public void setRdv(String rdv) {
-		this.rdv = rdv;
-	}
+    public int onEnd() {
+        return 0;
+    }
 }

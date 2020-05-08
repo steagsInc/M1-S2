@@ -1,18 +1,17 @@
-package eu.su.mas.dedaleEtu.mas.agents.dummies;
+package dedale.agents;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import dedale.behaviours.communication.ConversationCalling;
+import dedale.behaviours.communication.ExchangeMap;
+import dedale.behaviours.exploration.ExploDuoBehaviour;
+import dedale.behaviours.exploration.ExploSoloBehaviour;
+import dedale.knowledge.MapRepresentation;
+import dedale.knowledge.YellowPage;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
-import eu.su.mas.dedaleEtu.mas.behaviours.communication.AskStop;
-import eu.su.mas.dedaleEtu.mas.behaviours.communication.ReceiveMap;
-import eu.su.mas.dedaleEtu.mas.behaviours.communication.SendMap;
-import eu.su.mas.dedaleEtu.mas.behaviours.communication.Startingconversation;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploration.ExploDuoBehaviour;
-import eu.su.mas.dedaleEtu.mas.behaviours.exploration.ExploSoloBehaviour;
-import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
-import eu.su.mas.dedaleEtu.mas.knowledge.YellowPage;
+import generalBehaviour.GeneralFSM;
 import jade.core.behaviours.Behaviour;
 
 /**
@@ -35,7 +34,13 @@ public class ExploreDuoAgent extends CustomAgent {
 		super.setup();
 		
 		this.explo = new ExploDuoBehaviour(this,this.mapping);
-		lb.add(this.explo);
+		lb.add(new GeneralFSM(this));
+		
+		try {
+			this.doWait(2000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		addBehaviour(new startMyBehaviours(this,lb));
 		
