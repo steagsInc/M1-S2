@@ -82,7 +82,7 @@ public class BroadcastPosition extends SimpleBehaviour{
 
 		final ACLMessage msg = this.myAgent.receive(msgTemplate);
 		if (msg != null) {
-			
+			System.out.println(msg.getSender().getLocalName());
 			this.agent.getMapping().updateAgentPos(msg.getSender().getLocalName(), msg.getContent());
 			
 		}

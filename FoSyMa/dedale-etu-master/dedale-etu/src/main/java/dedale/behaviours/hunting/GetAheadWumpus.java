@@ -43,12 +43,14 @@ public class GetAheadWumpus extends CustomExplorationBehaviour{
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 		if (myPosition!=null){
 			
-			System.out.println("scout");
-
+			System.out.println("scout "+this.myAgent.getLocalName());
+			System.out.println(this.mapping.getWumpusPos());
+			
 			String nextPos = this.mapping.getPath(myPosition, this.mapping.getWumpusPos());
-			System.out.println(nextPos);
+			
 			if(nextPos!="") ((AbstractDedaleAgent)this.myAgent).moveTo(nextPos);
 			else {
+				System.out.println(this.mapping.getHunterName());
 				System.out.println(this.mapping.getAgentPos(this.mapping.getHunterName()));
 				nextPos = this.mapping.getPath(myPosition, this.mapping.getAgentPos(this.mapping.getHunterName()));
 				if(nextPos!="") ((AbstractDedaleAgent)this.myAgent).moveTo(nextPos);

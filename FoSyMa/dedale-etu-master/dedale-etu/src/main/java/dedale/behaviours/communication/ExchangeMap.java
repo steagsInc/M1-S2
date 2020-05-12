@@ -139,7 +139,7 @@ public class ExchangeMap extends OneShotBehaviour{
 	
 	@Override
 	public void action() {
-		timeout--;
+		//timeout--;
 		
 		System.out.println("conversation " + Integer.toString(timeout));
 		

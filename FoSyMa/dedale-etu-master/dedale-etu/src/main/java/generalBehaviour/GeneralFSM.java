@@ -11,12 +11,12 @@ import java.util.Set;
 import dataStructures.tuple.Couple;
 import dedale.agents.CustomAgent;
 import dedale.agents.ExploreSoloAgent;
+import dedale.behaviours.communication.BroadcastWumpus;
 import dedale.behaviours.communication.ConversationCalling;
 import dedale.behaviours.communication.ExchangeMap;
 import dedale.behaviours.communication.position.BroadcastPosition;
 import dedale.behaviours.hunting.FollowWumpus;
 import dedale.behaviours.hunting.GetAheadWumpus;
-import dedale.behaviours.knowledge.BroadcastWumpus;
 import dedale.behaviours.knowledge.WumpusScouting;
 import dedale.knowledge.MapRepresentation;
 import dedale.knowledge.MapRepresentation.MapAttribute;
@@ -50,13 +50,13 @@ public class GeneralFSM extends FSMBehaviour {
 		super(myagent);
 		this.myAgent = myagent;
 		
-		ParallelBehaviour exploProcess = new ParallelProcess(this.myAgent,this.myAgent.getMapping(),new WumpusScouting(this.myAgent),new BroadcastWumpus(this.myAgent),new ConversationCalling(this.myAgent),new BroadcastPosition(this.myAgent),this.myAgent.getExplo());
+		ParallelBehaviour exploProcess = new ParallelProcess(this.myAgent,"EXPLO",this.myAgent.getMapping(),new WumpusScouting(this.myAgent),new BroadcastWumpus(this.myAgent,BroadcastWumpus.role.Receiver),new ConversationCalling(this.myAgent),new BroadcastPosition(this.myAgent),this.myAgent.getExplo());
 		
-		ParallelBehaviour convoProcess = new ParallelProcess(this.myAgent,new ExchangeMap(this.myAgent));
+		ParallelBehaviour convoProcess = new ParallelProcess(this.myAgent,"CONVERSATION",new ExchangeMap(this.myAgent));
 		
-		ParallelBehaviour huntingProcess = new ParallelProcess(this.myAgent,this.myAgent.getMapping(),new BroadcastPosition(this.myAgent),new FollowWumpus(this.myAgent,this.myAgent.getMapping()),new BroadcastWumpus(this.myAgent,BroadcastWumpus.role.Broadcaster));
+		ParallelBehaviour huntingProcess = new ParallelProcess(this.myAgent,"HUNTING",this.myAgent.getMapping(),new BroadcastPosition(this.myAgent),new FollowWumpus(this.myAgent,this.myAgent.getMapping()),new BroadcastWumpus(this.myAgent,BroadcastWumpus.role.Broadcaster));
 		
-		ParallelBehaviour scoutingProcess = new ParallelProcess(this.myAgent,this.myAgent.getMapping(),new BroadcastPosition(this.myAgent),new WumpusScouting(this.myAgent),new BroadcastWumpus(this.myAgent,BroadcastWumpus.role.Receiver),new GetAheadWumpus(this.myAgent,this.myAgent.getMapping()));
+		ParallelBehaviour scoutingProcess = new ParallelProcess(this.myAgent,"SCOUT",this.myAgent.getMapping(),new BroadcastPosition(this.myAgent),new WumpusScouting(this.myAgent),new BroadcastWumpus(this.myAgent,BroadcastWumpus.role.Receiver),new GetAheadWumpus(this.myAgent,this.myAgent.getMapping()));
 		
 		String [] explo = {"EXPLO"} ;
         String [] conversation = {"CONVERSATION"} ;
@@ -71,17 +71,18 @@ public class GeneralFSM extends FSMBehaviour {
         
         registerDefaultTransition("EXPLO","EXPLO",explo);
         registerTransition("EXPLO","EXPLO",0,explo);
-        registerTransition("EXPLO","CONVERSATION",1,conversation);
+        registerTransition("EXPLO","CONVERSATION",2,conversation);
         registerTransition("EXPLO","HUNTING",5,hunting);
-        registerTransition("EXPLO","SCOUT",10,scout);
+        registerTransition("EXPLO","SCOUT",20,scout);
+        registerTransition("EXPLO","SCOUT",21,scout);
+        registerTransition("EXPLO","SCOUT",25,scout);
         
         registerDefaultTransition("CONVERSATION","EXPLO",explo);
         registerTransition("CONVERSATION","EXPLO",1,explo);
         
-        registerDefaultTransition("HUNTING","HUNTING",explo);
+        registerDefaultTransition("HUNTING","HUNTING",hunting);
         registerTransition("HUNTING","HUNTING",0,hunting);
-        registerTransition("HUNTING","EXPLO",1,explo);
-        registerTransition("HUNTING","HUNTING",10,hunting);
+        registerTransition("HUNTING","EXPLO",10,explo);
         
         registerDefaultTransition("SCOUT","SCOUT",explo);
         registerTransition("SCOUT","SCOUT",0,hunting);

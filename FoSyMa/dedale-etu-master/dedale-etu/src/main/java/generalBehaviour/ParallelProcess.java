@@ -29,8 +29,9 @@ import java.util.LinkedList;
 public class ParallelProcess extends ParallelBehaviour {
     CustomAgent myAgent;
     LinkedList<Behaviour> protocoles = new LinkedList<>();
+    private String state;
 
-    public ParallelProcess(CustomAgent myAgent, Behaviour ... other_behaviours){
+    public ParallelProcess(CustomAgent myAgent,String state, Behaviour ... other_behaviours){
         super(myAgent,WHEN_ANY);
         this.myAgent = myAgent;
         for (Behaviour b:other_behaviours)
@@ -38,6 +39,7 @@ public class ParallelProcess extends ParallelBehaviour {
             addSubBehaviour(b);
             this.protocoles.add(b);
         }
+        this.state=state;
     }
 
     @Override
@@ -47,6 +49,9 @@ public class ParallelProcess extends ParallelBehaviour {
         {
             cpt = cpt + o.onEnd();
         }
+        //System.out.println(state+" "+this.myAgent.getLocalName());
+        //System.out.println(Integer.toString(cpt)+" cpt "+this.myAgent.getLocalName());
+        
         return cpt;
     }
 

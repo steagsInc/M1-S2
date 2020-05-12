@@ -42,6 +42,7 @@ public class WumpusScouting extends OneShotBehaviour{
 		//Example to retrieve the current position
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 		if (myPosition!=null){
+			stench = false;
 			
 			if(!((CustomAgent)this.myAgent).getStenchs().isEmpty()) stench = true;
 			

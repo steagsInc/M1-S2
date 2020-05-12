@@ -121,6 +121,8 @@ public class ConversationCalling extends OneShotBehaviour{
 
 	@Override
 	public void action() {
+		getAnswer = false;
+    	answered = false;
 		askConv();
 		answerConv();
 		confirmConv();
@@ -128,6 +130,9 @@ public class ConversationCalling extends OneShotBehaviour{
 	
 	@Override
     public int onEnd() {
-        return (getAnswer && answered) ? 1 : 0;
+        if (getAnswer && answered){
+        	return 2;
+        }
+        return 0;
     }
 }

@@ -1,4 +1,4 @@
-package dedale.behaviours.knowledge;
+package dedale.behaviours.communication;
 
 import java.io.IOException;
 import java.util.List;
@@ -74,7 +74,7 @@ public class BroadcastWumpus extends OneShotBehaviour{
 				
 				ACLMessage msg=new ACLMessage(ACLMessage.INFORM);
 				msg.setSender(this.myAgent.getAID());
-				msg.setProtocol("Pos");
+				msg.setProtocol("WumpusPos");
 				msg.setContent(wumpusPos.get(0));
 				
 				for(String a:agents) {
@@ -95,7 +95,7 @@ public class BroadcastWumpus extends OneShotBehaviour{
 	
 	protected void getAnswer() {
 		
-		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.INFORM), MessageTemplate.MatchProtocol("Pos"));
+		final MessageTemplate msgTemplate =MessageTemplate.and( MessageTemplate.MatchPerformative(ACLMessage.INFORM), MessageTemplate.MatchProtocol("WumpusPos"));
 
 		final ACLMessage msg = this.myAgent.receive(msgTemplate);
 		if (msg != null) {
@@ -110,6 +110,14 @@ public class BroadcastWumpus extends OneShotBehaviour{
 	
 	@Override
 	public void action() {
+		this.huntCall = false;
+		
+		try {
+			this.myAgent.doWait(500);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		if(this.AgentRole == role.Both || this.AgentRole == role.Broadcaster) sendMessage();
 		if(this.AgentRole == role.Both || this.AgentRole == role.Receiver) getAnswer();
 		
@@ -117,7 +125,7 @@ public class BroadcastWumpus extends OneShotBehaviour{
 
 	@Override
     public int onEnd() {
-		if(huntCall) return 10;
+		if(huntCall) return 20;
         return 0;
     }
 

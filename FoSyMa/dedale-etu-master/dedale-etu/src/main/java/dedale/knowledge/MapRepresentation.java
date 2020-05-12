@@ -134,9 +134,7 @@ public class MapRepresentation implements Serializable {
 		
 		//System.out.println(idFrom +" to --> "+idTo);
 		
-		if(idTo == null) return null;
-		
-		if(agentNodes.contains(idTo)) return null;
+		if(idTo == null || g.getNode(idTo)==null || agentNodes.contains(idTo)) return null;
 		
 		Graph cg = Graphs.clone(this.g);
 		

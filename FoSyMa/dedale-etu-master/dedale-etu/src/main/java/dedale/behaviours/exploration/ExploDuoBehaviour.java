@@ -61,10 +61,7 @@ public class ExploDuoBehaviour extends CustomExplorationBehaviour {
 				e.printStackTrace();
 			}
 
-			System.out.println("explo");
 			String nextNode=this.mapping.getNextObjectif(myPosition);
-			
-			System.out.println(nextNode);
 			
 			if (nextNode=="") {
 				if(this.rdv!=null && this.rdv != myPosition) {

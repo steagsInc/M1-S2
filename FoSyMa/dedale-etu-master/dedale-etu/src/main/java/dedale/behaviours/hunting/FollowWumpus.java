@@ -52,16 +52,9 @@ public class FollowWumpus extends CustomExplorationBehaviour{
 				e.printStackTrace();
 			}
 			
-			
-			System.out.println("hunt");
-			
 			List<String> stenchs = ((CustomAgent)this.myAgent).getStenchs();
 			
 			stenchs.removeAll(this.mapping.getAgentsPos());
-			
-			//System.out.println(stenchs);
-			
-			//System.out.println(this.myAgent.getLocalName());
 			
 			String nextMove = null;
 			
@@ -70,6 +63,7 @@ public class FollowWumpus extends CustomExplorationBehaviour{
 			if(nextMove!=null) {
 				String nextPos = this.mapping.getPath(myPosition, nextMove);
 				if(nextPos!="") ((AbstractDedaleAgent)this.myAgent).moveTo(nextPos);
+				lost = 5;
 			}else{
 				
 				lost--;
@@ -83,9 +77,10 @@ public class FollowWumpus extends CustomExplorationBehaviour{
     public int onEnd() {
 		if(lost<=0) {
 			System.out.println("lost him");
-			return 1;
+			return 10;
+		}else {
+			return 0;
 		}
-        return 0;
     }
 
 }
